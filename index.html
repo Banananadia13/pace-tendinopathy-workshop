@@ -1,0 +1,772 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PACE Tendinopathy Workshop</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Lato:wght@400;700&family=Noto+Serif:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: a workshop console. Sticky navy header with tab nav; each view is a two-pane bench (stage + controls) that stacks on phones. Same system as the PACE Diabetes workshop. */
+:root{
+  --bg:#F5F6FB; --surface:#FFFFFF; --surface-2:#EDEFF8; --line:#D8DBEA;
+  --fg:#23264A; --muted:#5C607D; --head:#1F1B4F;
+  --navy:#1F1B4F; --on-navy:#FFFFFF;
+  --teal:#1A9C86; --teal-ink:#0F7D6B; --teal-soft:#E3F3EF; --orange:#D9841F; --orange-ink:#9A5A0B; --orange-soft:#FCEFD9;
+  --rose:#C2413A; --rose-soft:#FAE3E3; --lav-soft:#ECEFFA; --on-accent:#FFFFFF;
+  /* tendon colours */
+  --col1:#C99A3C; --col1-soft:#F3E3BC; --col3:#D9684A; --tcell:#3E6BD6; --gag:#58B4DC; --vessel:#C2413A; --nerve:#8A5CD1;
+  --muscle:#D86A62; --muscle-line:#A9443E; --bone:#EFE7D2; --bone-line:#BDB08A; --sheath:#E9DDBF; --lesion:#E7C9B8;
+  --f-display:"Noto Serif", Georgia, "Times New Roman", serif;
+  --f-body:"Lato", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#111228; --surface:#1A1B36; --surface-2:#232548; --line:#33365E;
+  --fg:#E8E9F6; --muted:#A4A7C6; --head:#DCDDFB;
+  --navy:#0B0B20; --on-navy:#F1F1FB;
+  --teal:#3CC3AA; --teal-ink:#5FD6BF; --teal-soft:#16352F; --orange:#F0A84A; --orange-ink:#F5BE74; --orange-soft:#3A2C17;
+  --rose:#F07467; --rose-soft:#3A1E22; --lav-soft:#22244A; --on-accent:#06221D;
+  --col1:#E0B95E; --col1-soft:#4A3F22; --col3:#F08A6C; --tcell:#7C9CF2; --gag:#6CC6EC; --vessel:#F07467; --nerve:#B08CF0;
+  --muscle:#C9655E; --muscle-line:#8E3F3A; --bone:#5A5540; --bone-line:#8C8462; --sheath:#3E3922; --lesion:#5A3F36; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#111228; --surface:#1A1B36; --surface-2:#232548; --line:#33365E;
+  --fg:#E8E9F6; --muted:#A4A7C6; --head:#DCDDFB;
+  --navy:#0B0B20; --on-navy:#F1F1FB;
+  --teal:#3CC3AA; --teal-ink:#5FD6BF; --teal-soft:#16352F; --orange:#F0A84A; --orange-ink:#F5BE74; --orange-soft:#3A2C17;
+  --rose:#F07467; --rose-soft:#3A1E22; --lav-soft:#22244A; --on-accent:#06221D;
+  --col1:#E0B95E; --col1-soft:#4A3F22; --col3:#F08A6C; --tcell:#7C9CF2; --gag:#6CC6EC; --vessel:#F07467; --nerve:#B08CF0;
+  --muscle:#C9655E; --muscle-line:#8E3F3A; --bone:#5A5540; --bone-line:#8C8462; --sheath:#3E3922; --lesion:#5A3F36; color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.5}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--navy)}
+h1,h2,h3{font-family:var(--f-display);color:var(--head);text-wrap:balance;margin:0;line-height:1.2}
+h2{font-size:clamp(24px,3vw,32px)} h3{font-size:18px}
+p{margin:0} ul,ol{margin:0;padding-left:1.2em} li+li{margin-top:5px}
+a{color:var(--teal-ink)}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--orange);outline-offset:2px;border-radius:6px}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.muted{color:var(--muted)} .tiny{font-size:13px;color:var(--muted)}
+.wrap{max-width:1260px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.stack{display:grid;gap:14px;align-content:start;min-width:0}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+body.mode-client .team-only{display:none!important} body.mode-team .client-only{display:none!important}
+
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--navy);color:var(--on-navy)}
+.top .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:8px 22px;padding-block:10px}
+.brand{display:grid;line-height:1.15}
+.brand .eyebrow{color:rgba(255,255,255,.72)}
+.brand strong{font-family:var(--f-display);font-size:20px}
+.nav{display:flex;flex-wrap:wrap;gap:4px;flex:1 1 480px}
+.nav a{color:var(--on-navy);text-decoration:none;font-weight:700;font-size:14.5px;padding:7px 11px;border-radius:999px;opacity:.84}
+.nav a:hover{opacity:1;background:rgba(255,255,255,.1)}
+.nav a[aria-current="page"]{opacity:1;background:var(--teal);color:var(--on-accent)}
+.modebox{display:flex;align-items:center;gap:8px;font-size:13px}
+.seg{display:inline-flex;flex-wrap:wrap;gap:2px;padding:3px;border-radius:22px;background:var(--surface-2);border:1px solid var(--line)}
+.seg button{border:0;background:transparent;padding:7px 13px;min-height:36px;border-radius:999px;font-weight:700;font-size:14px;cursor:pointer;color:var(--fg)}
+.seg button[aria-pressed="true"]{background:var(--navy);color:var(--on-navy)}
+.seg.teal button[aria-pressed="true"]{background:var(--teal);color:var(--on-accent)}
+.top .seg{background:transparent;border-color:rgba(255,255,255,.35)}
+.top .seg button{color:var(--on-navy);min-height:30px;padding:4px 12px}
+.top .seg button[aria-pressed="true"]{background:var(--on-navy);color:var(--navy)}
+
+main{padding-block:22px 60px}
+.view-head{display:grid;gap:8px;margin-bottom:18px;max-width:78ch}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;min-width:0}
+.panel.soft{background:var(--surface-2);border-color:transparent}
+.bench{display:grid;gap:16px;grid-template-columns:minmax(0,1.55fr) minmax(290px,1fr);align-items:start}
+@media (max-width:900px){.bench{grid-template-columns:minmax(0,1fr)}}
+.grid2{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr))}
+.grid3{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr))}
+.callout{border-left:4px solid var(--teal);background:var(--teal-soft);border-radius:0 var(--r) var(--r) 0;padding:11px 14px}
+.callout.warn{border-color:var(--orange);background:var(--orange-soft)} .callout.stop{border-color:var(--rose);background:var(--rose-soft)}
+.callout.navy{border-color:var(--navy);background:var(--lav-soft)}
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;padding:2px 9px;border-radius:999px;background:var(--lav-soft)}
+.tag.g{background:var(--teal-soft);color:var(--teal-ink)} .tag.a{background:var(--orange-soft);color:var(--orange-ink)} .tag.r{background:var(--rose-soft);color:var(--rose)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:42px;padding:8px 16px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-weight:700;cursor:pointer;text-decoration:none;color:var(--fg)}
+.btn:hover{border-color:var(--teal)} .btn.primary{background:var(--teal-ink);border-color:var(--teal-ink);color:var(--on-accent)}
+.btn.sm{min-height:36px;padding:5px 12px;font-size:14px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 12px;min-height:38px;font-size:14px;font-weight:700;cursor:pointer;text-align:left}
+.chip[aria-pressed="true"].dim{background:var(--rose-soft);border-color:var(--rose)} .chip[aria-pressed="true"].sim{background:var(--teal-soft);border-color:var(--teal)}
+.chip[aria-pressed="true"].ctx{background:var(--orange-soft);border-color:var(--orange)}
+.svg-host svg{display:block;width:100%;height:auto}
+.svg-host{background:var(--surface-2);border-radius:8px;overflow:hidden}
+.ctl{display:grid;gap:4px;min-width:0}
+.ctl-top{display:flex;justify-content:space-between;gap:10px;align-items:baseline;font-weight:700;font-size:14.5px}
+.ctl-top output{font-family:var(--f-mono);font-weight:600;font-size:13.5px;color:var(--teal-ink)}
+input[type=range]{width:100%;min-height:34px;accent-color:var(--teal-ink)}
+.lab{font-weight:700;font-size:14.5px}
+.meters{display:grid;gap:8px}
+.meter{display:grid;grid-template-columns:minmax(110px,150px) 1fr minmax(64px,auto);gap:10px;align-items:center;font-size:14px}
+.meter .track{height:12px;border-radius:999px;background:var(--surface-2);overflow:hidden}
+.meter .track i{display:block;height:100%;border-radius:999px;background:var(--teal);transition:width .25s}
+.meter b{font-family:var(--f-mono);font-weight:600;font-size:12.5px;text-align:right}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--muted)}
+.legend i{display:inline-block;width:14px;height:6px;border-radius:3px;margin-right:5px;vertical-align:middle}
+.tiles{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
+.tile{background:var(--surface-2);border-radius:8px;padding:10px 12px}
+.tile b{display:block;font-family:var(--f-mono);font-size:20px;font-weight:600;color:var(--head)}
+.tile span{font-size:12.5px;color:var(--muted)}
+details.acc{border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+details.acc>summary{cursor:pointer;list-style:none;padding:13px 15px;min-height:44px;font-weight:700;display:flex;gap:10px;align-items:center}
+details.acc>summary::-webkit-details-marker{display:none}
+details.acc>summary::before{content:"+";font-family:var(--f-mono);color:var(--teal-ink);width:1ch}
+details.acc[open]>summary::before{content:"\2212"}
+details.acc .body{padding:0 15px 15px;display:grid;gap:10px}
+.ladder{display:grid;gap:6px}
+.rung{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:center;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:9px 12px;min-height:46px;cursor:pointer;font-weight:700}
+.rung .n{font-family:var(--f-mono);width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--surface-2)}
+.rung[aria-pressed="true"]{border-color:var(--teal);background:var(--teal-soft)}
+.rung.off{opacity:.5}
+.rung small{display:block;font-weight:400;color:var(--muted);font-size:13px}
+.light{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;border-radius:var(--r);padding:12px 14px;border:2px solid var(--line)}
+.light .dot{width:34px;height:34px;border-radius:50%}
+.light.g{border-color:var(--teal);background:var(--teal-soft)} .light.g .dot{background:var(--teal)}
+.light.a{border-color:var(--orange);background:var(--orange-soft)} .light.a .dot{background:var(--orange)}
+.light.r{border-color:var(--rose);background:var(--rose-soft)} .light.r .dot{background:var(--rose)}
+select{min-height:40px;border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:4px 8px;width:100%;min-width:0}
+.quiz fieldset{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);padding:12px 14px;margin:0;min-width:0}
+.quiz legend{font-weight:700;padding:0 6px}
+.quiz label{display:flex;gap:10px;align-items:flex-start;min-height:42px;padding:7px 6px;border-radius:8px;cursor:pointer}
+.quiz label:hover{background:var(--surface-2)}
+.quiz input{margin-top:4px;width:18px;height:18px;accent-color:var(--teal-ink)}
+.quiz .fb{margin-top:6px;font-size:15px} .right{color:var(--teal-ink);font-weight:700} .wrong{color:var(--rose);font-weight:700}
+.sources{font-size:14px} .sources li{overflow-wrap:anywhere}
+svg text{font-family:var(--f-body)}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+<style>html{color-scheme:light}:root{padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand"><span class="eyebrow">PACE Health · Module 2</span><strong>Tendinopathy</strong></div>
+    <nav class="nav" id="nav" aria-label="Workshop sections"></nav>
+    <div class="modebox"><span>View for</span>
+      <div class="seg" id="mode-seg" role="group" aria-label="View for"><button type="button" data-mode="team">Team</button><button type="button" data-mode="client">Client</button></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="main">
+
+<!-- ================= START ================= -->
+<section class="view" id="view-start">
+  <div class="view-head"><p class="eyebrow">Assess the demand. Build the capacity.</p>
+    <h2 class="team-only">What can this tendon tolerate today, what does the person need it to tolerate, and how do we bridge the gap?</h2>
+    <h2 class="client-only">Tendons are living tissue. They get stronger when they are loaded the right way.</h2>
+    <p class="muted team-only">Use tendon biology to inform your reasoning, not to memorise a protocol. Explore the tendon, then run the load lab and see what makes it adapt, settle or flare.</p>
+    <p class="muted client-only">Look inside a tendon, see how it responds to load, and learn why a sore tendon is not a damaged one.</p></div>
+  <div class="grid2">
+    <div class="panel stack"><h3>Where to go</h3>
+      <div class="grid3" id="start-tiles"></div></div>
+    <div class="panel stack team-only"><h3>By the end you can</h3>
+      <ol><li>Explain tendon function and adaptation in language useful for clinical decisions.</li><li>Recognise a likely tendinopathy and know when to think again or refer.</li><li>Identify what raised demand or lowered capacity.</li><li>Explain tendinopathy without reinforcing fear or fragility.</li><li>Prescribe and progress force, rate and energy-storage loading for the person and task.</li><li>Use symptom and next-day response to adjust load, without treating pain as a damage meter.</li><li>Build a return-to-activity plan linking goal, demand, capacity and exercise.</li></ol></div>
+    <div class="panel stack client-only"><h3>Three things to take away</h3>
+      <ol><li>Rest calms a sore tendon but does not make it stronger. The right loading does.</li><li>Some soreness during and after exercise is normal and safe. How it settles by the next morning is the guide.</li><li>A scan shows structure. It does not show how strong the tendon is or how much it should hurt.</li></ol></div>
+  </div>
+  <div class="stack" style="margin-top:18px"><h3>Test your assumptions</h3><p class="muted">Decide whether you agree, then open each one.</p><div class="stack" id="myths"></div></div>
+</section>
+
+<!-- ================= INSIDE A TENDON ================= -->
+<section class="view" id="view-tendon" hidden>
+  <div class="view-head"><p class="eyebrow">Inside a tendon</p><h2>A living rope: cells that sense load and rebuild it</h2>
+    <p class="muted">A tendon is living tissue that is always being rebuilt. Choose a tissue state and a zoom level, then run loading cycles and watch the cells sense the load, talk to each other and lay down new collagen.</p></div>
+  <div class="bench">
+    <div class="stack">
+      <div class="panel stack">
+        <div class="row" style="justify-content:space-between">
+          <div class="seg teal" id="zoom-seg" role="group" aria-label="Zoom level"><button type="button" data-zoom="whole">Whole tendon</button><button type="button" data-zoom="fascicle">Fascicles</button><button type="button" data-zoom="matrix">Fibres &amp; cells</button></div>
+          <span class="tag">Illustrative</span></div>
+        <div class="svg-host" id="tendon-stage"></div>
+        <div class="legend" id="tendon-legend"></div>
+        <div class="row"><button class="btn sm primary" type="button" id="cycle-btn" aria-pressed="false">Run loading cycles</button><button class="btn sm" type="button" id="play-btn">Pause motion</button></div>
+        <p class="tiny" id="tendon-cap"></p>
+      </div>
+      <div class="panel stack"><div class="row" style="justify-content:space-between"><h3>What the cells are doing</h3><span class="tag">Live</span></div>
+        <div class="meters" id="life-meters"></div><p id="tendon-live" role="status" aria-live="polite"></p></div>
+      <div class="panel stack"><h3 id="state-title"></h3><p id="state-text"></p><div class="callout" id="state-note"></div></div>
+    </div>
+    <div class="stack">
+      <div class="panel stack"><span class="lab">Tissue state</span>
+        <div class="seg" id="state-seg" role="group" aria-label="Tissue state"><button type="button" data-st="healthy">Healthy</button><button type="button" data-st="adapted">Trained</button><button type="button" data-st="reactive">Reactive</button><button type="button" data-st="dysrepair">Dysrepair</button><button type="button" data-st="degenerative">Degenerative</button></div>
+        <p class="tiny team-only">The continuum is a model of tissue change. It does not tell you which exercise to give today.</p>
+        <div class="meters" id="state-meters"></div>
+      </div>
+      <div class="panel stack">
+        <label class="ctl" for="stretch"><span class="ctl-top"><span>Pull on the tendon</span><output id="stretch-out"></output></span><input id="stretch" type="range" min="0" max="80" value="20"></label>
+        <div class="row"><button class="btn sm" type="button" data-pull="5">Resting</button><button class="btn sm" type="button" data-pull="30">Walking</button><button class="btn sm" type="button" data-pull="55">Heavy lift</button><button class="btn sm" type="button" data-pull="75">Jump / sprint</button></div>
+        <div class="svg-host" id="curve" role="img" aria-label="Force against stretch curve"></div>
+        <p class="tiny" id="curve-text" role="status" aria-live="polite"></p>
+      </div>
+      <div class="panel stack team-only"><label class="lab" for="site">Different tendons, different jobs</label>
+        <select id="site"></select><p id="site-text" class="tiny"></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= LOAD LAB ================= -->
+<section class="view" id="view-load" hidden>
+  <div class="view-head"><p class="eyebrow">Load lab</p><h2>Run the weeks and watch the tendon adapt, settle or flare</h2>
+    <p class="muted">Set the life load, the exercise and the recovery context, then run time forward. Change anything along the way. <span class="team-only">The model is illustrative: it shows direction and reasoning, not predicted numbers.</span></p></div>
+  <div class="bench">
+    <div class="stack">
+      <div class="panel stack">
+        <div class="row" style="justify-content:space-between"><h3>Capacity against demand</h3><span class="tag">Illustrative model, not a clinical calculator</span></div>
+        <div class="svg-host" id="lab-chart" role="img" aria-label="Chart of capacity, demand and symptoms by week"></div>
+        <div class="legend"><span><i style="background:var(--teal)"></i>Capacity</span><span><i style="background:var(--orange)"></i>Highest weekly demand</span><span><i style="background:var(--head)"></i>Goal demand</span><span><i style="background:var(--rose)"></i>Symptom response</span></div>
+        <div class="tiles" id="lab-tiles"></div>
+        <div class="callout" id="lab-read" role="status" aria-live="polite"></div>
+        <div class="row"><button class="btn primary" type="button" id="run1">Run 1 week</button><button class="btn" type="button" id="run4">Run 4 weeks</button><button class="btn" type="button" id="lab-reset">Start again</button><button class="btn" type="button" id="spike">Add a sudden spike</button></div>
+      </div>
+      <div class="panel stack"><h3>The 72 hours after a loading session</h3>
+        <div class="svg-host" id="coll-chart" role="img" aria-label="Collagen breakdown and building after a session"></div>
+        <div class="legend"><span><i style="background:var(--rose)"></i>Collagen breakdown</span><span><i style="background:var(--teal)"></i>Collagen building</span><span><i style="background:var(--head)"></i>Net balance</span><span><i style="background:var(--orange)"></i>Next session</span></div><p class="tiny" id="coll-text"></p></div>
+    </div>
+    <div class="stack">
+      <div class="panel stack"><span class="lab">Try a story</span>
+        <div class="row" id="presets"></div><p class="tiny">Each story sets the controls week by week and runs 16 weeks.</p></div>
+      <div class="panel stack"><span class="lab">Starting point</span>
+        <div class="seg" id="start-seg" role="group" aria-label="Starting point"><button type="button" data-s0="healthy">Healthy, untrained</button><button type="button" data-s0="reactive">Recently flared</button><button type="button" data-s0="chronic">Long-standing</button></div>
+        <span class="lab">Goal</span>
+        <div class="seg" id="goal-seg" role="group" aria-label="Goal"><button type="button" data-goal="40">Daily life</button><button type="button" data-goal="65">Social tennis</button><button type="button" data-goal="90">Jumping sport</button></div>
+      </div>
+      <div class="panel stack"><span class="lab">This week</span>
+        <label class="ctl" for="life"><span class="ctl-top"><span>Life load (work, sport, walking)</span><output id="life-out"></output></span><input id="life" type="range" min="0" max="100" value="45"></label>
+        <span class="lab">Exercise type</span>
+        <div class="seg" id="type-seg" role="group" aria-label="Exercise type"><button type="button" data-type="none">None</button><button type="button" data-type="stretch">Stretching</button><button type="button" data-type="iso">Isometric</button><button type="button" data-type="hsr">Heavy slow</button><button type="button" data-type="fast">Fast / jumping</button></div>
+        <label class="ctl" for="inten"><span class="ctl-top"><span>Intensity (relative to what they can do now)</span><output id="inten-out"></output></span><input id="inten" type="range" min="10" max="100" value="70"></label>
+        <label class="ctl" for="freq"><span class="ctl-top"><span>Sessions per week</span><output id="freq-out"></output></span><input id="freq" type="range" min="0" max="7" value="3"></label>
+      </div>
+      <div class="panel stack"><span class="lab">Recovery context</span>
+        <div class="row" id="ctx"></div><p class="tiny">These do not damage the tendon. They change how well it recovers and adapts.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PAIN ================= -->
+<section class="view" id="view-pain" hidden>
+  <div class="view-head"><p class="eyebrow">Pain and protection</p><h2>Tendon pain is a protector, not a damage meter</h2>
+    <p class="muted">Pain usually switches on before the tendon reaches its limit. How early depends on more than the tendon. Add and remove the things below and watch the protection line move while the tendon stays the same.</p></div>
+  <div class="bench">
+    <div class="stack">
+      <div class="panel stack">
+        <div class="row" style="justify-content:space-between"><h3>Same tendon, different pain</h3><span class="tag">Illustrative</span></div>
+        <div class="svg-host" id="pain-stage" role="img" aria-label="Load scale with protection line and tendon capacity"></div>
+        <div class="light" id="pain-light"><span class="dot"></span><div><strong id="pain-title"></strong><p id="pain-text"></p></div></div>
+        <label class="ctl" for="act"><span class="ctl-top"><span>Load of the activity</span><output id="act-out"></output></span><input id="act" type="range" min="0" max="100" value="48"></label>
+        <label class="ctl" for="pcap"><span class="ctl-top"><span>What the tendon can tolerate (capacity)</span><output id="pcap-out"></output></span><input id="pcap" type="range" min="20" max="100" value="60"></label>
+      </div>
+      <div class="panel stack"><h3>The next-morning check</h3>
+        <p class="muted">Use the response during, later and the next morning to decide what to do with the load.</p>
+        <div class="grid2">
+          <label class="ctl" for="c-during"><span class="ctl-top"><span>Pain during exercise</span><output id="c-during-out"></output></span><input id="c-during" type="range" min="0" max="10" value="3"></label>
+          <label class="ctl" for="c-morning"><span class="lab">Next morning</span><select id="c-morning"><option value="0">Stiffness and pain as usual</option><option value="1">Noticeably stiffer or sorer, settles through the day</option><option value="2">Much worse, or not settling</option></select></label>
+          <label class="ctl" for="c-func"><span class="lab">Function</span><select id="c-func"><option value="0">Doing what I normally do</option><option value="1">Some things are harder</option><option value="2">Can't do usual activities</option></select></label>
+          <label class="ctl" for="c-trend"><span class="lab">Trend over the last few sessions</span><select id="c-trend"><option value="0">Steady or improving</option><option value="1">Creeping up</option></select></label>
+        </div>
+        <div class="light" id="chk-light"><span class="dot"></span><div><strong id="chk-title"></strong><p id="chk-text"></p></div></div>
+        <p class="tiny">"Back to usual by 24 hours" is a helpful guide, not a biological cut-off. Use the trend, not a stopwatch.</p>
+      </div>
+    </div>
+    <div class="stack">
+      <div class="panel stack"><span class="lab">Things that turn protection up (DIMs)</span><div class="row" id="dims"></div>
+        <span class="lab">Things that turn protection down (SIMs)</span><div class="row" id="sims"></div>
+        <button class="btn sm" type="button" id="pain-clear">Clear all</button></div>
+      <div class="panel stack"><h3>Three things can diverge</h3>
+        <div class="meters" id="diverge"></div>
+        <p class="tiny">Structure, symptoms and function do not move together. People improve without a scan "normalising", and many people with changes on a scan have no pain.</p></div>
+      <div class="callout navy stack"><strong>Go deeper in Understanding Pain</strong>
+        <p>The protection gauge, DIMs and SIMs and the tendon 24-hour check come from the Understanding Pain tool.</p>
+        <div class="row"><a class="btn sm" href="https://banananadia13.github.io/pace-pain-sandbox/#explore" target="_blank" rel="noopener">Open Understanding Pain</a><a class="btn sm" href="https://banananadia13.github.io/pace-pain-sandbox/#doms" target="_blank" rel="noopener">Tendons: the 24-hour check</a></div></div>
+      <div class="stack team-only"><h3>Explain it well</h3><div class="stack" id="says"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= REHAB ================= -->
+<section class="view" id="view-rehab" hidden>
+  <div class="view-head"><p class="eyebrow">Build capacity</p><h2>Progress what the person needs, not everyone through the same phases</h2>
+    <p class="muted">Pick the goal to see which rungs matter, then open a rung.</p></div>
+  <div class="bench">
+    <div class="stack">
+      <div class="panel stack"><div class="row" style="justify-content:space-between"><h3>The tendon capacity ladder</h3>
+        <div class="seg teal" id="lgoal-seg" role="group" aria-label="Goal"><button type="button" data-lg="0">Daily life</button><button type="button" data-lg="1">Social tennis</button><button type="button" data-lg="2">Basketball</button></div></div>
+        <div class="ladder" id="ladder"></div></div>
+      <div class="panel stack team-only"><h3>The loading toolbox</h3><p class="muted">Tools, not mandatory stages. Justify the choice by the adaptation needed.</p><div class="grid2" id="tools"></div></div>
+    </div>
+    <div class="stack">
+      <div class="panel stack" id="rung-panel"></div>
+      <div class="panel stack team-only"><h3>Dose the adaptation</h3>
+        <p>Exercise becomes rehabilitation when the stimulus is measurable and progressive.</p>
+        <ul><li><strong>Load:</strong> resistance, sets and reps, effort (RPE or reps in reserve), range, tempo, frequency.</li><li><strong>Progress by:</strong> more load, more range, higher speed, more volume, less assistance, more task specificity.</li></ul>
+        <div class="callout warn"><strong>Programming challenge.</strong> Jane does 3 × 15 hip abduction at RPE 3/10 for four weeks. Symptoms are stable but strength and function have not changed. The stimulus is too light to drive adaptation: raise the load before adding more exercises.</div></div>
+      <div class="panel stack"><h3>If it flares</h3>
+        <ol><li><strong>What changed?</strong> Sport volume, a new exercise, more range, less recovery, a work spike.</li><li><strong>How big is the response?</strong> Symptoms, morning stiffness, function, how long it lasts.</li><li><strong>What can we modify?</strong> Reduce the most provocative dose for now.</li><li><strong>What can stay?</strong> Keep tolerable strength work and general activity.</li><li><strong>How do we rebuild?</strong> Progress again once it settles and the driver is understood.</li></ol>
+        <p class="callout">A flare is a signal to adjust the plan. It is not proof of reinjury and it is not back to square one.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CASES ================= -->
+<section class="view" id="view-cases" hidden>
+  <div class="view-head"><p class="eyebrow">Cases</p><h2>Start with the person before the tendon</h2>
+    <p class="muted">Commit to an answer before you open each stage.</p></div>
+  <div class="row" style="margin-bottom:14px"><div class="seg teal" id="case-seg" role="group" aria-label="Case"><button type="button" data-case="jane">Jane, 55 · lateral hip</button><button type="button" data-case="mike">Mike, 40 · Achilles</button></div></div>
+  <div class="bench"><div class="stack" id="case-main"></div>
+    <div class="stack"><div class="panel stack"><h3>PACE tendon capacity framework</h3>
+      <ol><li><strong>Goal:</strong> what do they want to return to?</li><li><strong>Required load:</strong> what must the tendon and person tolerate?</li><li><strong>Current capacity:</strong> what can they tolerate today?</li><li><strong>Gap:</strong> where are the important mismatches?</li><li><strong>Modify:</strong> which provocative loads need temporary adjustment?</li><li><strong>Build:</strong> what stimulus develops the missing capacity?</li><li><strong>Expose:</strong> how do we return to the meaningful task?</li><li><strong>Monitor:</strong> how did symptoms and function respond during, later and next day?</li></ol></div>
+      <div class="panel stack"><h3>When the story does not fit</h3>
+        <div class="callout stop">Sudden traumatic loss of function, a felt "pop" with weakness, unexpected neurological symptoms, systemic features, severe unexplained or night pain, or failure to progress as expected: reconsider the diagnosis and refer.</div>
+        <p class="tiny">Also consider bursitis or adjacent joint pathology, bone stress injury, referred or radicular pain, and inflammatory or systemic disease. Ask about recent fluoroquinolone antibiotics and corticosteroid use.</p></div></div></div>
+</section>
+
+<!-- ================= CHECK ================= -->
+<section class="view" id="view-check" hidden>
+  <div class="view-head"><p class="eyebrow">Check yourself</p><h2>Eight questions</h2><p class="muted">Explanations appear when you check. Try again as often as you like.</p></div>
+  <form class="quiz stack" id="quiz" novalidate></form>
+  <div class="panel stack" style="margin-top:22px"><h3>Six Monday-morning rules</h3>
+    <ol><li>Treat the person, not the scan.</li><li>Understand the load–capacity gap.</li><li>Rest reduces load. It does not build capacity.</li><li>Isometrics and eccentrics are tools, not magic treatments.</li><li>Progress force, then range, rate and task demands as required.</li><li>Monitor response and progress by function, not a rigid calendar.</li></ol></div>
+  <div class="panel stack" style="margin-top:14px"><h3>Sources</h3><ol class="sources" id="sources"></ol>
+    <p class="tiny">The tendon pictures, curves and load lab are teaching models built on these sources. They show direction and reasoning, not measured values.</p></div>
+</section>
+</main>
+
+<script>
+(function(){
+'use strict';
+const $=(s,r)=>(r||document).querySelector(s), $$=(s,r)=>[...(r||document).querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const narrow=()=>window.innerWidth<620,CW=()=>narrow()?360:640;
+const store={get(k,d){try{const v=localStorage.getItem('pace-tn-'+k);return v==null?d:JSON.parse(v);}catch(e){return d;}},set(k,v){try{localStorage.setItem('pace-tn-'+k,JSON.stringify(v));}catch(e){}}};
+function rng(seed){let a=seed>>>0;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function seg(sel,attr,fn,val){const el=$(sel);const set=v=>{$$('button',el).forEach(b=>b.setAttribute('aria-pressed',String(b.getAttribute(attr)===String(v))));};el.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;set(b.getAttribute(attr));fn(b.getAttribute(attr));});set(val);return set;}
+
+/* ---------- mode + routing ---------- */
+const VIEWS=[['start','Start'],['tendon','Inside a tendon'],['load','Load lab'],['pain','Pain'],['rehab','Build capacity'],['cases','Cases',1],['check','Check yourself',1]];
+let mode=store.get('mode','team');
+function nav(){const cur=(location.hash||'#start').slice(1);$('#nav').innerHTML=VIEWS.filter(v=>mode==='team'||!v[2]).map(v=>`<a href="#${v[0]}"${v[0]===cur?' aria-current="page"':''}>${v[1]}</a>`).join('');}
+function route(){let v=(location.hash||'').slice(1);const d=VIEWS.find(x=>x[0]===v);if(!d||(d[2]&&mode==='client'))v='start';
+  $$('.view').forEach(s=>s.hidden=s.id!=='view-'+v);nav();$$('#nav a').forEach(a=>a.getAttribute('href')==='#'+v?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current'));window.scrollTo(0,0);}
+const setModeSeg=seg('#mode-seg','data-mode',m=>setMode(m),mode);
+function setMode(m){mode=m;store.set('mode',m);document.body.classList.toggle('mode-team',m==='team');document.body.classList.toggle('mode-client',m==='client');setModeSeg(m);route();renderState();renderPain();renderRung();}
+window.addEventListener('hashchange',route);
+
+/* ---------- start ---------- */
+$('#start-tiles').innerHTML=[['tendon','Inside a tendon','See the structure and how it changes'],['load','Load lab','Run weeks of loading and recovery'],['pain','Pain','Why sore does not mean damaged'],['rehab','Build capacity','The ladder from tolerable load to the task']].map(t=>`<a class="tile" href="#${t[0]}" style="text-decoration:none;color:inherit"><b style="font-family:var(--f-display);font-size:17px">${t[1]}</b><span>${t[2]}</span></a>`).join('');
+const MYTHS=[
+ ['"The scan says degeneration, so the tendon is wearing out."','Structural change on a scan is common in people with no pain, and tendons with changed areas usually keep plenty of well-aligned tissue around them. The scan does not show how much load the tendon can take. [5]','Changes on a scan are common, even in people with no pain. They do not tell you how strong your tendon is.'],
+ ['"Pain during exercise means I am damaging it."','Pain is information about protection, not a direct damage meter. Tolerable pain during loading that settles by the next morning is compatible with good outcomes. [6]','Some soreness with exercise is normal and safe. What matters is how it settles by the next morning.'],
+ ['"Complete rest is the safest option."','Rest lowers load and can calm symptoms, but it does not build capacity. Unloaded tendon and muscle lose capacity, so the gap to the goal gets wider. [3]','Rest can calm things down, but it also lets the tendon and muscle get weaker. Careful loading builds them back up.'],
+ ['"Eccentrics heal tendons. Isometrics must come first."','Eccentric, isotonic and heavy slow loading all work. Isometrics help some people but are not reliably better for pain and are not a required first step. Choose the tool for the adaptation needed. [8][9]','There is no single magic exercise. The best exercise is one that is heavy enough, that you can tolerate, and that builds toward what you want to do.'],
+ ['"Stretching will fix it."','Stretching does not give the muscle–tendon unit the force it needs to adapt, and for some tendons end-range positions add compression. Capacity comes from progressive loading. [4]','Stretching does not make a tendon stronger. Strength work does.']];
+$('#myths').innerHTML=MYTHS.map(m=>`<details class="acc"><summary>${esc(m[0])}</summary><div class="body"><p class="team-only">${esc(m[1])}</p><p class="client-only">${esc(m[2])}</p></div></details>`).join('');
+
+/* ---------- inside a tendon ---------- */
+const STATES={
+ healthy:{t:'Healthy tendon',thick:1,align:1,cells:6,round:0,gag:8,col3:0,vess:0,stiff:1,lesion:0,m:[2,3,4,1,1,0],
+  team:'Type I collagen is tightly packed and aligned along the line of pull, with a gentle crimp. Sparse, spindle-shaped tenocytes sit between the fibres and turn the matrix over slowly. Blood vessels and nerves sit mostly in the tissue around the tendon, not within it.',
+  client:'Strong fibres all line up in the direction of pull, like a rope. A small number of cells look after them.',
+  note:'A tendon reflects the loads it has been given. Structure and stiffness are adapted to usual demand.'},
+ adapted:{t:'Trained tendon',thick:1.08,align:1,cells:6,round:0,gag:8,col3:0,vess:0,stiff:1.25,lesion:0,m:[2,4,4,1,1,0],
+  team:'After months of heavy, progressive loading the tendon is stiffer and a little thicker, and the muscle attached to it is stronger. Under the microscope it looks much like before: the important change is mechanical. High-strain loading over 12 weeks or more is what drives it. [4]',
+  client:'After months of strength work the tendon is stiffer and the muscle is stronger. Together they can take more load.',
+  note:'Adaptation needs load that is heavy enough and sustained for months. Light, comfortable loading maintains but does not build.'},
+ reactive:{t:'Reactive tendon',thick:1.25,align:.92,cells:11,round:.75,gag:34,col3:0,vess:0,stiff:.9,lesion:0,m:[4,2,4,4,4,0],
+  team:'A short-term response to load the tendon was not prepared for. Cells activate, round up and make large proteoglycans that bind water, so the tendon thickens. Collagen is still largely intact. This can settle when load is brought back within capacity. [1][2]',
+  client:'After a sudden jump in activity the cells wake up and the tendon holds more water, so it thickens and can feel sore. The fibres are still intact, and this usually settles when load is adjusted.',
+  note:'Typical story: a sudden spike in load, a new activity, or a return after a break. Adjust the provocative load; keep useful loading in the system.'},
+ dysrepair:{t:'Tendon dysrepair',thick:1.3,align:.6,cells:13,round:.8,gag:36,col3:10,vess:3,stiff:.82,lesion:.5,m:[4,2,3,4,4,2],
+  team:'An attempt at repair. More cells and more proteoglycan, collagen fibres separating and losing alignment, some thinner type III collagen, and new vessels and nerves growing in. Some reversal is possible with load management and exercise. [1][2]',
+  client:'The tendon has been trying to repair itself. Some fibres have lost their neat line-up and there is extra water and new small blood vessels.',
+  note:'Changes in structure do not map neatly onto pain. Assessment of capacity and function tells you what to train.'},
+ degenerative:{t:'Degenerative tendon',thick:1.32,align:.28,cells:5,round:.5,gag:22,col3:16,vess:5,stiff:.78,lesion:1,m:[4,2,3,2,3,3],
+  team:'An area of marked disorganisation with fewer cells and little aligned collagen sits alongside, and is often surrounded by, healthy tissue. Because the whole tendon is thicker, the amount of well-aligned tissue is usually maintained. The changed area may not normalise; the rest of the tendon and the muscle still adapt. [2][5]',
+  client:'One area has lost its neat structure, but it sits within plenty of healthy tendon. The healthy part and the muscle can still get stronger, which is what makes the difference.',
+  note:'"Degenerative" on a report is not the same as fragile or tearing. Train the healthy tissue and the muscle: capacity can improve without the scan changing.'}};
+const METERS=['Thickness','Stiffness','Aligned collagen','Cell activity','Water and proteoglycan','New vessels and nerves'],LV=['None','Low','Moderate','High','Very high'];
+const SITES=[['Achilles','Thick and stiff. Stores and returns energy in running and jumping, so the end goal is often fast, high-rate loading. At the heel insertion, deep ankle dorsiflexion adds compression.'],['Patellar','Transmits very high forces in jumping and landing. The goal for a jumping athlete includes heavy strength and energy-storage loading.'],['Gluteal (lateral hip)','Controls the pelvis on one leg. Hip adduction (crossed legs, hanging on one hip, side-lying on the sore side) adds compression against the greater trochanter.'],['Rotator cuff','Thinner and more compliant: built for control through range more than energy storage. Capacity through overhead range matters for the task.'],['Lateral elbow','Loaded by gripping and wrist extension. Volume and grip force across work and sport both count toward weekly load.']];
+let st='healthy',zoom='whole',pull=20;
+if(!CanvasRenderingContext2D.prototype.roundRect)CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){const q=Array.isArray(r)?r[0]:r;this.moveTo(x+q,y);this.arcTo(x+w,y,x+w,y+h,q);this.arcTo(x+w,y+h,x,y+h,q);this.arcTo(x,y+h,x,y,q);this.arcTo(x,y,x+w,y,q);this.closePath();};
+/* ---------- living tendon: animated canvas ---------- */
+const LIFE={healthy:.35,adapted:.5,reactive:.85,dysrepair:.75,degenerative:.4};
+const stageEl=$('#tendon-stage'),cv=document.createElement('canvas');stageEl.appendChild(cv);const ctx=cv.getContext('2d');
+const RM=window.matchMedia('(prefers-reduced-motion: reduce)');
+let VW=640,VH=340,scene=null,clock=0,last=0,playing=!RM.matches,cycling=false,strainNow=pull/10,stim=0,COL={},CURVE=null,liveKey='',meterT=0;
+const rates={sig:0,build:0,brk:0};
+function readCol(){const cs=getComputedStyle(document.documentElement);['col1','col1-soft','col3','tcell','gag','vessel','nerve','muscle','muscle-line','bone','bone-line','sheath','lesion','teal','rose','orange','fg','muted','surface','surface-2'].forEach(k=>COL[k]=cs.getPropertyValue('--'+k).trim());}
+readCol();
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{readCol();draw();});
+new MutationObserver(()=>{readCol();draw();}).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+function sizeCanvas(){const w=stageEl.clientWidth||640;VW=narrow()?420:640;VH=narrow()?400:340;const k=w/VW,d=window.devicePixelRatio||1;
+  cv.style.width=w+'px';cv.style.height=Math.round(VH*k)+'px';cv.width=Math.round(w*d);cv.height=Math.round(VH*k*d);ctx.setTransform(d*k,0,0,d*k,0,0);}
+const FS=()=>narrow()?15:13;
+function poly(pts){const L=[0];for(let i=1;i<pts.length;i++)L.push(L[i-1]+Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]));return{pts,L,len:L[L.length-1]};}
+function polyAt(P,f){const d=clamp(f,0,1)*P.len;let i=1;while(i<P.L.length-1&&P.L[i]<d)i++;const a=P.pts[i-1],b=P.pts[i],t=(d-P.L[i-1])/((P.L[i]-P.L[i-1])||1);return[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t];}
+function line(pts){ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.stroke();}
+function noiseAt(arr,x,step){const i=Math.floor(x/step),t=x/step-i,a=arr[clamp(i,0,arr.length-1)],b=arr[clamp(i+1,0,arr.length-1)],s=t*t*(3-2*t);return a+(b-a)*s;}
+function rgba(c,a){const h=(c||'').replace('#','');if(h.length!==6)return c;return`rgba(${parseInt(h.slice(0,2),16)},${parseInt(h.slice(2,4),16)},${parseInt(h.slice(4,6),16)},${a})`;}
+function glow(x,y,r,col,a){if(a<=.01)return;const g=ctx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,rgba(col,.9));g.addColorStop(.45,rgba(col,.35));g.addColorStop(1,rgba(col,0));ctx.globalAlpha=a;ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();ctx.globalAlpha=1;}
+function makeVessel(R,x0,y0,dir,len){const ph=R()*6,pts=[];for(let s=0;s<=1.0001;s+=.04)pts.push([x0+Math.sin(s*3.2+ph)*16+s*(R()-.5)*4,y0+dir*s*len]);return{P:poly(pts),ph:R(),rbc:Array.from({length:6},(_,i)=>i/6+R()*.05)};}
+
+function buildScene(){const S=STATES[st],R=rng(11+Object.keys(STATES).indexOf(st)*17+(zoom==='whole'?0:zoom==='fascicle'?5:9)),sc={pro:[],mmp:[],sig:[],pulses:[]};
+  if(zoom==='matrix'){
+    const split=S.lesion===1?VW*.58:null,inL=x=>split!=null&&x<split;sc.split=split;
+    const n=narrow()?15:14,top=22,bot=VH-22;sc.fib=[];
+    for(let i=0;i<n;i++){const y=top+i*(bot-top)/(n-1);sc.fib.push({y,ph:R()*6.3,br:R()*6.3,noise:Array.from({length:Math.ceil(VW/36)+3},()=>R()*2-1),noise2:Array.from({length:Math.ceil(VW/36)+3},()=>R()*2-1),glints:[]});}
+    const align=x=>inL(x)?S.align:split!=null?1:S.align;sc.align=align;
+    let nc=S.cells+4;sc.cells=[];
+    for(let k=0;k<nc*4&&sc.cells.length<nc;k++){let x=30+R()*(VW-60);if(split!=null&&sc.cells.length<nc-2)x=split+20+R()*(VW-split-40);else if(split!=null)x=30+R()*(split-60);
+      const j=Math.floor(R()*(n-1)),y=(sc.fib[j].y+sc.fib[j+1].y)/2;if(sc.cells.some(c=>Math.hypot(c.x-x,c.y-y)<46))continue;
+      sc.cells.push({x,y,round:R()<S.round,ph:R()*6.3,glow:0,act:inL(x)?.35:1,nb:[]});}
+    sc.edges=[];sc.cells.forEach((c,i)=>{sc.cells.map((d,j)=>[j,Math.hypot(d.x-c.x,(d.y-c.y)*1.6)]).filter(p=>p[0]!==i&&p[1]<200).sort((a,b)=>a[1]-b[1]).slice(0,3).forEach(([j])=>{if(!sc.edges.some(e=>(e.a===i&&e.b===j)||(e.a===j&&e.b===i))){const e={a:i,b:j,bend:(R()-.5)*26,ph:R()*6};sc.edges.push(e);c.nb.push(e);sc.cells[j].nb.push(e);}});});
+    sc.water=Array.from({length:Math.round(S.gag*(VW/640))},()=>({x:R()*VW,y:R()*VH,r:3+R()*6,vx:(R()-.5)*8,vy:(R()-.5)*5,ph:R()*6}));
+    sc.col3=Array.from({length:S.col3},()=>{const x=split!=null?20+R()*(split-40):20+R()*(VW-40);return{x,y:20+R()*(VH-40),a:R()*Math.PI,len:24+R()*24,ph:R()*6};});
+    sc.vess=Array.from({length:S.vess},(_,i)=>{const x0=split!=null?30+R()*(split-80):40+R()*(VW-80),d=i%2?-1:1;return makeVessel(R,x0,d>0?-6:VH+6,d,VH*.45+R()*VH*.35);});
+  }else if(zoom==='fascicle'){
+    const n=5,gap=narrow()?16:13,top=12,fh=(VH-24-gap*(n-1))/n;sc.fas=[];sc.gap=gap;
+    const swell=clamp((S.thick-1)/.32,0,1);
+    for(let i=0;i<n;i++){const les=(st==='dysrepair'&&i===2)||(st==='degenerative'&&(i===1||i===2));
+      sc.fas.push({y:top+i*(fh+gap),h:fh,swell,slide:[.15,.9,.35,.75,.05][i],les,
+        streaks:Array.from({length:7},(_,k)=>({yo:(k+.6)/7.2,ph:R()*6.3,noise:Array.from({length:Math.ceil(VW/30)+3},()=>R()*2-1)})),
+        cells:Array.from({length:les&&st==='degenerative'?2:(st==='reactive'||st==='dysrepair'?6:4)},()=>({u:R(),v:.2+R()*.6,ph:R()*6,glow:0})),
+        water:Array.from({length:Math.round(2+swell*7)},()=>({u:R(),v:R(),r:3+R()*4,ph:R()*6}))});}
+    sc.gaps=[];for(let g=0;g<n-1;g++){const y=sc.fas[g].y+fh+gap/2,pts=[];for(let x=-10;x<=VW+10;x+=10)pts.push([x,y+Math.sin(x/47+g)*2.2]);sc.gaps.push({kind:g%2?'nerve':'vessel',P:poly(pts),rbc:Array.from({length:14},(_,i)=>i/14+R()*.03),dir:g%3?1:-1});}
+    sc.sprouts=[];sc.fas.forEach((f,i)=>{if(!f.les||!S.vess)return;for(let k=0;k<2;k++){const x0=VW*(.2+.5*k+R()*.15),y0=f.y-gap/2,pts=[];for(let s=0;s<=1.0001;s+=.05)pts.push([x0+Math.sin(s*4+k)*14+s*30,y0+s*f.h*.75]);sc.sprouts.push({P:poly(pts),rbc:[R(),R()+.33,R()+.66],nerve:k===0});}});
+  }else{
+    sc.spark=Array.from({length:Math.round(14+LIFE[st]*14)},()=>({u:.05+R()*.9,v:(R()-.5)*.75,ph:R()*6,glow:0}));
+    sc.rbc=Array.from({length:12},(_,i)=>i/12);sc.branch=[.22,.5,.78].map(u=>({u,len:5+R()*5}));
+    const pk=[];for(let r=0;r<3;r++){const cnt=r?r*6:1;for(let k=0;k<cnt;k++){const a=k/cnt*Math.PI*2+r*.3;pk.push({x:Math.cos(a)*r*.33,y:Math.sin(a)*r*.33,les:(st==='degenerative'&&r<2&&k<3)||(st==='dysrepair'&&r===1&&k<2)});}}sc.cross=pk;
+  }
+  scene=sc;
+}
+
+let prevFrac=0;
+function update(dt){const peak=pull/10;
+  strainNow=cycling?peak*(.5-.5*Math.cos(clock*2*Math.PI/1.4)):peak+.06*Math.sin(clock*1.1);
+  const mech=cycling?clamp(peak/6,0,1.35):clamp(peak/7,0,1)*.7;stim+=(mech-stim)*Math.min(1,dt*1.2);
+  const L=LIFE[st],ss=Math.min(stim,1);
+  rates.sig=clamp(L*.45+stim*.85,0,1.3);
+  rates.build=clamp((.12+.88*ss)*(st==='reactive'?.75:st==='dysrepair'?.8:1)*(.55+L*.6),0,1.2);
+  rates.brk=clamp(.2+({reactive:.35,dysrepair:.4,degenerative:.2}[st]||0)+Math.max(0,peak-6)*.13*(cycling?1:.3)+(cycling?stim*.2:0)-(cycling&&peak>1.5&&peak<=6?.08:0),0,1.2);
+  const sc=scene,R=Math.random;if(!sc)return;
+  const frac=cycling?.5-.5*Math.cos(clock*2*Math.PI/1.4):0,beat=cycling&&prevFrac<.9&&frac>=.9&&dt>0;prevFrac=frac;
+  if(zoom==='matrix'){
+    sc.cells.forEach((c,i)=>{c.glow=Math.max(0,c.glow-dt*1.3);if((beat&&R()<(.15+.35*Math.min(stim,1))*c.act)||R()<dt*(.04+.12*rates.sig)*c.act)fire(i,0,-1);
+      if(R()<dt*rates.build*1.6*c.act){let k=0,b=1e9;sc.fib.forEach((f,j)=>{const d=Math.abs(f.y-c.y);if(d<b){b=d;k=j;}});if(R()<.5&&k+1<sc.fib.length&&sc.fib[k+1].y>c.y)k++;else if(sc.fib[k].y>c.y&&k>0&&R()<.5)k--;
+        sc.pro.push({x:c.x,y:c.y,tx:c.x+(R()-.5)*70,k,p:0,sp:.35+R()*.3,sw:R()*6});}});
+    if(R()<dt*rates.brk*4.2){const k=Math.floor(R()*sc.fib.length);sc.mmp.push({x:20+R()*(VW-40),k,life:1,ph:R()*6});}
+    sc.sig.forEach(s=>{s.p+=dt*1.5;if(s.p>=1&&!s.done){s.done=true;const c=sc.cells[s.to];c.glow=Math.max(c.glow,.8);if(s.hop<1&&R()<.3)fire(s.to,s.hop+1,s.from);}});sc.sig=sc.sig.filter(s=>!s.done);
+    sc.pro.forEach(p=>{p.p+=dt*p.sp;if(p.p>=1&&!p.done){p.done=true;sc.fib[p.k].glints.push({x:p.tx,life:1});}});sc.pro=sc.pro.filter(p=>!p.done);
+    sc.fib.forEach(f=>{f.glints.forEach(g=>g.life-=dt*.45);f.glints=f.glints.filter(g=>g.life>0);});
+    sc.mmp.forEach(m=>m.life-=dt*.55);sc.mmp=sc.mmp.filter(m=>m.life>0);
+    sc.water.forEach(w=>{w.x=(w.x+w.vx*dt+VW+20)%(VW+20);w.y=(w.y+w.vy*dt+VH+20)%(VH+20);});
+  }else if(zoom==='fascicle'){
+    sc.fas.forEach(f=>f.cells.forEach(c=>{c.glow=Math.max(0,c.glow-dt*1.2);if((beat&&R()<.25+.4*Math.min(stim,1))||R()<dt*(.05+.15*rates.sig)*(f.les&&st==='degenerative'?.35:1))c.glow=1;}));
+    if(R()<dt*(.25+(st==='dysrepair'||st==='degenerative'?.9:0)+stim*.3))sc.pulses.push({g:1+2*Math.floor(R()*2),p:0});
+    sc.pulses.forEach(p=>p.p+=dt*.45);sc.pulses=sc.pulses.filter(p=>p.p<1);
+  }else{sc.spark.forEach(s=>{s.glow=Math.max(0,s.glow-dt*1.1);if((beat&&R()<.3+.4*Math.min(stim,1))||R()<dt*(.06+.2*rates.sig))s.glow=1;});
+    if(R()<dt*(.3+stim*.4))sc.pulses.push({p:0});sc.pulses.forEach(p=>p.p+=dt*.4);sc.pulses=sc.pulses.filter(p=>p.p<1);}
+}
+function fire(i,hop,from){const sc=scene,c=sc.cells[i];c.glow=1;c.nb.forEach(e=>{const to=e.a===i?e.b:e.a;if(to===from)return;sc.sig.push({e,from:i,to,p:0,hop});});}
+
+function draw(){if(!scene)return;const sc=scene;ctx.clearRect(0,0,VW,VH);ctx.lineCap='round';ctx.lineJoin='round';
+  if(zoom==='matrix')drawMatrix(sc);else if(zoom==='fascicle')drawFascicle(sc);else drawWhole(sc);}
+
+function drawMatrix(sc){const S=STATES[st],e=strainNow,crimp=clamp(1-e/2.8,0,1),sx=1+e*.0065,X=x=>x*sx,t=clock,sq=clamp(e/8,0,1);
+  if(sc.split!=null){ctx.fillStyle=COL.lesion;ctx.globalAlpha=.55;ctx.fillRect(0,0,X(sc.split),VH);ctx.globalAlpha=1;}
+  sc.water.forEach(w=>{ctx.globalAlpha=.3;ctx.fillStyle=COL.gag;ctx.beginPath();ctx.arc(X(w.x),w.y,w.r*(1-.35*sq)*(1+.08*Math.sin(t*1.4+w.ph)),0,7);ctx.fill();});ctx.globalAlpha=1;
+  const W0=st==='adapted'?6.8:5.6;
+  sc.fib.forEach((f,fi)=>{const segs=sc.split!=null?[[-10,sc.split,S.align],[sc.split,VW+10,1]]:[[-10,VW+10,S.align]];
+    segs.forEach(([a,b,al])=>{const pts=[],w=W0*(.55+.45*al),amp=5.2*crimp+(1-al)*3.5;
+      for(let x=a;x<=b;x+=6){const d=(1-al)*(noiseAt(f.noise,x+12,36)*20+noiseAt(f.noise2,x,36)*8);pts.push([X(x),f.y+amp*Math.sin(x/13+f.ph)+d+.9*Math.sin(t*.9+f.br+x/80)]);}
+      ctx.globalAlpha=.55+.45*al;ctx.strokeStyle=COL.col1;ctx.lineWidth=w;line(pts);
+      ctx.globalAlpha=(.55+.45*al)*.75;ctx.strokeStyle=COL['col1-soft'];ctx.lineWidth=w*.32;line(pts.map(p=>[p[0],p[1]-w*.18]));
+      ctx.globalAlpha=.22;ctx.strokeStyle=COL.fg;ctx.lineWidth=w*.85;ctx.setLineDash([1.4,4.6]);line(pts);ctx.setLineDash([]);ctx.globalAlpha=1;});
+    f.glints.forEach(g=>{glow(X(g.x),f.y,10,COL.teal,g.life*.9);ctx.fillStyle=COL.teal;ctx.globalAlpha=g.life;ctx.beginPath();ctx.ellipse(X(g.x),f.y,6*g.life+2,2.2,0,0,7);ctx.fill();ctx.globalAlpha=1;});});
+  sc.col3.forEach(c=>{const a=c.a+.15*Math.sin(t*.6+c.ph);ctx.strokeStyle=COL.col3;ctx.lineWidth=2;ctx.globalAlpha=.85;ctx.beginPath();ctx.moveTo(X(c.x),c.y);ctx.quadraticCurveTo(X(c.x+Math.cos(a)*c.len*.5)+6*Math.sin(t+c.ph),c.y+Math.sin(a)*c.len*.5,X(c.x+Math.cos(a)*c.len),c.y+Math.sin(a)*c.len);ctx.stroke();ctx.globalAlpha=1;});
+  sc.vess.forEach(v=>{const pts=v.P.pts.map(p=>[X(p[0]),p[1]]),pulse=1+.12*Math.sin(t*2*Math.PI*1.1);
+    ctx.strokeStyle=COL.nerve;ctx.lineWidth=1.6;line(pts.map(p=>[p[0]+7,p[1]]));
+    ctx.strokeStyle=COL.vessel;ctx.globalAlpha=.85;ctx.lineWidth=7*pulse;line(pts);ctx.globalAlpha=.35;ctx.strokeStyle=COL.surface;ctx.lineWidth=2.6;line(pts);ctx.globalAlpha=1;
+    v.rbc.forEach(r=>{const q=polyAt(v.P,(r+t*.22)%1);ctx.fillStyle=COL.vessel;ctx.beginPath();ctx.arc(X(q[0]),q[1],2.6,0,7);ctx.fill();});});
+  const cpos=c=>[X(c.x),c.y];
+  sc.edges.forEach(ed=>{const A=cpos(sc.cells[ed.a]),B=cpos(sc.cells[ed.b]),mx=(A[0]+B[0])/2,my=(A[1]+B[1])/2+ed.bend+3*Math.sin(t*.7+ed.ph);ed.c=[mx,my];
+    ctx.strokeStyle=COL.tcell;ctx.globalAlpha=.42;ctx.lineWidth=1.3;ctx.beginPath();ctx.moveTo(A[0],A[1]);ctx.quadraticCurveTo(mx,my,B[0],B[1]);ctx.stroke();ctx.globalAlpha=1;});
+  sc.sig.forEach(s=>{const A=cpos(sc.cells[s.from]),B=cpos(sc.cells[s.to]),C=s.e.c||[(A[0]+B[0])/2,(A[1]+B[1])/2],p=s.p,u=1-p,x=u*u*A[0]+2*u*p*C[0]+p*p*B[0],y=u*u*A[1]+2*u*p*C[1]+p*p*B[1];glow(x,y,8,COL.orange,.8);ctx.fillStyle=COL.orange;ctx.beginPath();ctx.arc(x,y,2,0,7);ctx.fill();});
+  sc.cells.forEach(c=>{const [x,y]=cpos(c),b=1+.06*Math.sin(t*1.3+c.ph),rx=(c.round?9:15)*b*(c.round?1:1+e*.01),ry=(c.round?7:3.8)*b;glow(x,y,22,COL.orange,c.glow*.75);
+    ctx.fillStyle=COL.tcell;ctx.beginPath();ctx.ellipse(x,y,rx,ry,.05*Math.sin(t*.5+c.ph),0,7);ctx.fill();ctx.fillStyle=COL.surface;ctx.globalAlpha=.7;ctx.beginPath();ctx.ellipse(x,y,rx*.42,ry*.45,0,0,7);ctx.fill();ctx.globalAlpha=1;});
+  sc.pro.forEach(p=>{const k=p.p,x=X(p.x+(p.tx-p.x)*k)+Math.sin(k*6+p.sw)*4,y=p.y+(sc.fib[p.k].y-p.y)*k;glow(x,y,7,COL.teal,.7);ctx.fillStyle=COL.teal;ctx.beginPath();ctx.arc(x,y,2.3,0,7);ctx.fill();});
+  sc.mmp.forEach(m=>{const f=sc.fib[m.k],x=X(m.x)+3*Math.sin(t*3+m.ph),y=f.y+2*Math.cos(t*2.4+m.ph),s=3.2;ctx.globalAlpha=Math.min(1,m.life*1.6);ctx.fillStyle=COL.rose;ctx.beginPath();ctx.moveTo(x,y-s);ctx.lineTo(x+s,y);ctx.lineTo(x,y+s);ctx.lineTo(x-s,y);ctx.closePath();ctx.fill();ctx.globalAlpha=1;});
+  if(sc.split!=null){const xs=X(sc.split);ctx.strokeStyle=COL.col3;ctx.setLineDash([5,4]);ctx.lineWidth=1.2;line([[xs,0],[xs,VH]]);ctx.setLineDash([]);label('Changed area',xs-10,'right');label('Healthy tissue',xs+10,'left');}
+}
+function label(txt,x,align,y){ctx.font=`700 ${FS()}px Lato, "Segoe UI", system-ui, sans-serif`;ctx.textAlign=align;const w=ctx.measureText(txt).width,yy=y||(8+FS()),x0=align==='right'?x-w:align==='center'?x-w/2:x;
+  ctx.fillStyle=COL.surface;ctx.globalAlpha=.85;ctx.beginPath();ctx.roundRect(x0-6,yy-FS()+1,w+12,FS()+7,6);ctx.fill();ctx.globalAlpha=1;ctx.fillStyle=COL.fg;ctx.fillText(txt,x,yy+2);}
+
+function drawFascicle(sc){const S=STATES[st],e=strainNow,crimp=clamp(1-e/2.8,0,1),t=clock,sq=clamp(e/8,0,1);
+  ctx.fillStyle=COL.sheath;ctx.fillRect(0,0,VW,VH);
+  const dx=f=>e*f.slide*3.2;
+  sc.fas.forEach((f,i)=>{const nx=sc.fas[i+1];if(!nx)return;ctx.strokeStyle=COL.muted;ctx.globalAlpha=.5;ctx.lineWidth=1;for(let x=20;x<VW;x+=46){ctx.beginPath();ctx.moveTo(x+dx(f),f.y+f.h);ctx.lineTo(x+dx(nx),nx.y);ctx.stroke();}ctx.globalAlpha=1;});
+  sc.gaps.forEach((g,gi)=>{const pts=g.P.pts;if(g.kind==='vessel'){const pulse=1+.15*Math.sin(t*2*Math.PI*1.1);ctx.strokeStyle=COL.vessel;ctx.globalAlpha=.8;ctx.lineWidth=5*pulse;line(pts);ctx.globalAlpha=1;
+      g.rbc.forEach(r=>{const q=polyAt(g.P,((r+g.dir*t*.06)%1+1)%1);ctx.fillStyle=COL.vessel;ctx.beginPath();ctx.ellipse(q[0],q[1],3.2,2.2,0,0,7);ctx.fill();});}
+    else{ctx.strokeStyle=COL.nerve;ctx.lineWidth=1.8;line(pts);sc.pulses.filter(p=>p.g===gi).forEach(p=>{const q=polyAt(g.P,p.p);glow(q[0],q[1],10,COL.nerve,.9);});}});
+  sc.fas.forEach(f=>{const d=dx(f),inset=(1-f.swell)*f.h*.1,y=f.y+inset-f.swell*1.5,h=f.h-2*inset+f.swell*3,brt=.5+.5*Math.sin(t*.8+f.y);
+    ctx.save();ctx.beginPath();ctx.roundRect(-30+d,y,VW+60,h,14);ctx.fillStyle=f.les?COL.lesion:COL['col1-soft'];ctx.fill();ctx.strokeStyle=COL.col1;ctx.lineWidth=1.3;ctx.stroke();ctx.clip();
+    f.water.forEach(w=>{ctx.globalAlpha=.3;ctx.fillStyle=COL.gag;ctx.beginPath();ctx.arc(w.u*VW+d,y+w.v*h,w.r*(1-.35*sq)*(1+.08*Math.sin(t*1.3+w.ph)),0,7);ctx.fill();});ctx.globalAlpha=1;
+    const al=f.les?(st==='degenerative'?.3:.6):1;
+    f.streaks.forEach(s=>{const pts=[];for(let x=-20;x<=VW+20;x+=6)pts.push([x*(1+e*.004)+d,y+s.yo*h+(2.6*crimp+(1-al)*2)*Math.sin(x/11+s.ph)+(1-al)*noiseAt(s.noise,x+20,30)*h*.18]);
+      ctx.strokeStyle=COL.col1;ctx.globalAlpha=f.les?.6:.9;ctx.lineWidth=f.les?1.8:2.6;line(pts);ctx.globalAlpha=1;});
+    f.cells.forEach(c=>{const x=c.u*VW+d,yy=y+c.v*h;glow(x,yy,16,COL.orange,c.glow*.65);ctx.fillStyle=COL.tcell;ctx.beginPath();ctx.ellipse(x,yy,8*(1+.06*Math.sin(t*1.2+c.ph)),2.8,0,0,7);ctx.fill();});
+    ctx.restore();});
+  sc.sprouts.forEach(s=>{ctx.strokeStyle=s.nerve?COL.nerve:COL.vessel;ctx.globalAlpha=.9;ctx.lineWidth=s.nerve?1.8:3.6;line(s.P.pts);ctx.globalAlpha=1;
+    if(!s.nerve)s.rbc.forEach(r=>{const q=polyAt(s.P,(r+t*.2)%1);ctx.fillStyle=COL.vessel;ctx.beginPath();ctx.arc(q[0],q[1],2,0,7);ctx.fill();});
+    else{const q=polyAt(s.P,(t*.5)%1);glow(q[0],q[1],8,COL.nerve,.8);}});
+}
+
+function drawWhole(sc){const S=STATES[st],e=strainNow,c=clamp(e/8,0,1),crimp=clamp(1-e/2.8,0,1),t=clock,nar=narrow(),cy=VH*(nar?.36:.4);
+  const xM0=VW*.03+c*VW*.035,xJ=VW*.35,tl=VW*.4*(1+e*.013),xB=xJ+tl,h=(nar?48:40)*S.thick,hm=(nar?130:116)*(1+.1*c)+2*Math.sin(t*1.2),bulge=S.thick>1.15?(S.thick-1)*(nar?44:40):0;
+  /* muscle */
+  ctx.beginPath();ctx.moveTo(xM0,cy);ctx.bezierCurveTo(xM0+(xJ-xM0)*.12,cy-hm*.6,xJ-(xJ-xM0)*.3,cy-hm*.52,xJ,cy-h/2);ctx.lineTo(xJ,cy+h/2);ctx.bezierCurveTo(xJ-(xJ-xM0)*.3,cy+hm*.52,xM0+(xJ-xM0)*.12,cy+hm*.6,xM0,cy);ctx.closePath();
+  ctx.fillStyle=COL.muscle;ctx.fill();ctx.strokeStyle=COL['muscle-line'];ctx.lineWidth=2;ctx.stroke();ctx.save();ctx.clip();
+  for(let k=-5;k<=5;k++){ctx.strokeStyle=COL['muscle-line'];ctx.globalAlpha=.45;ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(xM0+6,cy+k*hm*.035);ctx.bezierCurveTo(xM0+(xJ-xM0)*.35,cy+k*hm*.1,xJ-(xJ-xM0)*.35,cy+k*hm*.085,xJ,cy+k*h/11);ctx.stroke();}
+  ctx.globalAlpha=.1+.14*c;ctx.fillStyle=COL.surface;for(let k=-3;k<=3;k++){ctx.beginPath();ctx.ellipse(xM0+(xJ-xM0)*(.45+.04*Math.sin(t*1.6+k)),cy+k*hm*.09,(xJ-xM0)*.22,1.6,0,0,7);ctx.fill();}ctx.globalAlpha=1;ctx.restore();
+  /* tendon */
+  const tp=()=>{ctx.beginPath();ctx.moveTo(xJ,cy-h/2);ctx.quadraticCurveTo((xJ+xB)/2,cy-h/2-bulge,xB,cy-h/2+3);ctx.lineTo(xB,cy+h/2-3);ctx.quadraticCurveTo((xJ+xB)/2,cy+h/2+bulge,xJ,cy+h/2);ctx.closePath();};
+  tp();ctx.fillStyle=COL['col1-soft'];ctx.fill();ctx.save();tp();ctx.clip();
+  if(S.lesion){const lx=(xJ+xB)/2,g=ctx.createRadialGradient(lx,cy,2,lx,cy,(h/2+bulge)*(.6+.5*S.lesion)+14);g.addColorStop(0,COL.lesion);g.addColorStop(.7,COL.lesion);g.addColorStop(1,rgba(COL.lesion,0));ctx.fillStyle=g;ctx.fillRect(xJ,cy-h-bulge,tl,2*(h+bulge));}
+  for(let k=-4;k<=4;k++){const pts=[];for(let x=xJ;x<=xB;x+=5){const u=(x-xJ)/tl;pts.push([x,cy+k*(h/10+bulge*Math.sin(Math.PI*u)/10)+2.2*crimp*Math.sin(x/8+k*1.7)]);}ctx.strokeStyle=COL.col1;ctx.globalAlpha=.85;ctx.lineWidth=2.2;line(pts);}ctx.globalAlpha=1;
+  sc.spark.forEach(s=>{const x=xJ+s.u*tl,y=cy+s.v*(h+bulge*Math.sin(Math.PI*s.u));glow(x,y,10,COL.orange,.1+.9*s.glow);ctx.fillStyle=COL.tcell;ctx.beginPath();ctx.ellipse(x,y,4,1.6,0,0,7);ctx.fill();});
+  ctx.restore();tp();ctx.strokeStyle=COL.col1;ctx.lineWidth=2;ctx.stroke();
+  /* paratenon vessel and nerve */
+  const vy=u=>cy-h/2-bulge*Math.sin(Math.PI*u)-11+2.5*Math.sin(u*9),vp=[];for(let u=0;u<=1.0001;u+=.02)vp.push([xJ-14+u*(tl+8),vy(u)]);const V=poly(vp),pulse=1+.14*Math.sin(t*2*Math.PI*1.1);
+  sc.branch.forEach(b=>{const p=polyAt(V,b.u);ctx.strokeStyle=COL.vessel;ctx.lineWidth=2;ctx.globalAlpha=.8;ctx.beginPath();ctx.moveTo(p[0],p[1]);ctx.quadraticCurveTo(p[0]+6,p[1]+5,p[0]+10,p[1]+b.len+4);ctx.stroke();ctx.globalAlpha=1;});
+  ctx.strokeStyle=COL.nerve;ctx.lineWidth=1.5;line(vp.map(p=>[p[0],p[1]-6]));sc.pulses.forEach(p=>{const q=polyAt(V,p.p);glow(q[0],q[1]-6,8,COL.nerve,.9);});
+  ctx.strokeStyle=COL.vessel;ctx.globalAlpha=.85;ctx.lineWidth=4.6*pulse;line(vp);ctx.globalAlpha=1;sc.rbc.forEach(r=>{const q=polyAt(V,(r+t*.12)%1);ctx.fillStyle=COL.surface;ctx.globalAlpha=.75;ctx.beginPath();ctx.arc(q[0],q[1],1.5,0,7);ctx.fill();ctx.globalAlpha=1;});
+  /* enthesis + bone */
+  const bx=xB,bw=Math.max(44,VW-bx-12);ctx.fillStyle=COL.bone;ctx.strokeStyle=COL['bone-line'];ctx.lineWidth=2;ctx.beginPath();ctx.roundRect(bx,cy-64,bw,128,[0,22,22,0]);ctx.fill();ctx.stroke();
+  const eg=ctx.createLinearGradient(bx-8,0,bx+14,0);eg.addColorStop(0,COL['col1-soft']);eg.addColorStop(1,COL.bone);ctx.fillStyle=eg;ctx.fillRect(bx-6,cy-h/2+3,20,h-6);
+  /* pull arrow */
+  const ar=10+c*34,ax=Math.max(18,xM0-4);ctx.strokeStyle=COL.teal;ctx.fillStyle=COL.teal;ctx.lineWidth=4;line([[ax,cy],[ax-ar*.4,cy]]);
+  label('Muscle',(xM0+xJ)/2,'center',cy-hm*.5-14);label('Tendon',(xJ+xB)/2,'center',cy-h/2-bulge-30);label('Bone',bx+bw/2,'center',cy-80);
+  /* cross-section */
+  const ccx=nar?VW*.2:VW*.13,ccy=VH-(nar?78:50),cr=(nar?42:32)*Math.sqrt(S.thick);
+  ctx.fillStyle=COL.sheath;ctx.beginPath();ctx.arc(ccx,ccy,cr,0,7);ctx.fill();ctx.strokeStyle=COL.col1;ctx.lineWidth=1.6;ctx.stroke();
+  sc.cross.forEach((p,i)=>{const r=cr*.17*(1+.04*Math.sin(t*1.2+i));ctx.fillStyle=p.les?COL.lesion:COL['col1-soft'];ctx.strokeStyle=COL.col1;ctx.lineWidth=1;ctx.beginPath();ctx.arc(ccx+p.x*cr*1.05,ccy+p.y*cr*1.05,r,0,7);ctx.fill();ctx.stroke();});
+  for(let k=0;k<6;k++){const a=k/6*Math.PI*2+.5;ctx.fillStyle=COL.vessel;ctx.beginPath();ctx.arc(ccx+Math.cos(a)*cr*.52,ccy+Math.sin(a)*cr*.52,1.8,0,7);ctx.fill();}
+  label('Cross-section',ccx+cr+10,'left',ccy+4);
+}
+
+/* ---------- loop, captions, meters ---------- */
+const CAPS={
+ whole:'The muscle contracts and the tendon carries that force to the bone, stretching a little and springing back. Blood vessels and nerves run in the sheath around the tendon. The glowing points are tendon cells responding to load.',
+ fascicle:'Fascicles are bundles of collagen that slide past each other as the tendon stretches: the fine lines between them show that sliding. Blood vessels and nerves run in the soft tissue between bundles and keep the tendon supplied.',
+ matrix:'Tendon cells sit between the collagen fibres and stay in touch through long arms. When the tendon is loaded they sense the stretch, pass signals to their neighbours, and send out new collagen. Enzymes slowly clear old collagen, so the matrix is always being rebuilt.'};
+function liveText(){const pk=pull/10;let s;
+  if(!cycling&&pk<1.5)s='Resting. Cells keep a slow, steady turnover going. Leave a tendon unloaded for weeks and building slows while breakdown carries on, so capacity drifts down.';
+  else if(!cycling)s='Holding a steady stretch, like an isometric hold. The cells sense it and signal. Press "Run loading cycles" to see rhythmic loading.';
+  else if(pk<2)s='Light rhythmic loading. The cells are active, but the stretch is small, so the push to build is modest.';
+  else if(pk<=6)s='Loading within capacity. Each stretch is sensed, signals pass between cells, and new collagen is laid down. Over the next days building outpaces breakdown.';
+  else s='Heavy, high-strain loading: the strongest signal to adapt. Breakdown also rises over the first day or so, which is why recovery time between heavy sessions matters.';
+  if(st==='reactive'&&pk>4)s+=' This tendon is already reactive: bring the load within what it tolerates, then build.';
+  if(st==='degenerative')s+=' The healthy tissue alongside the changed area is still alive and responding to load.';
+  if(st==='adapted')s+=' A trained tendon is stiffer, so it stretches less for the same force.';
+  return s;}
+function setLive(){const s=liveText();if(s!==liveKey){liveKey=s;$('#tendon-live').textContent=s;}}
+function meters(){$('#life-meters').innerHTML=[['Cells signalling',rates.sig/1.3,'var(--orange)'],['Building collagen',rates.build/1.2,'var(--teal)'],['Breaking down collagen',rates.brk/1.2,'var(--rose)']].map(m=>`<div class="meter"><span>${m[0]}</span><div class="track"><i style="width:${Math.round(m[1]*100)}%;background:${m[2]}"></i></div><b>${m[1]<.33?'Low':m[1]<.66?'Moderate':'High'}</b></div>`).join('');}
+function legend(){const S=STATES[st],L=zoom==='matrix'?[['var(--col1)','Collagen fibres'],['var(--tcell)','Tendon cells'],['var(--orange)','Cell signals'],['var(--teal)','New collagen'],['var(--rose)','Clean-up enzymes'],['var(--gag)','Water and proteoglycan']]:zoom==='fascicle'?[['var(--col1)','Fascicles'],['var(--vessel)','Blood vessels'],['var(--nerve)','Nerves'],['var(--orange)','Active cells']]:[['var(--muscle)','Muscle'],['var(--col1)','Tendon'],['var(--vessel)','Blood supply'],['var(--nerve)','Nerves'],['var(--orange)','Active cells']];
+  if(zoom==='matrix'&&S.col3)L.push(['var(--col3)','Thin type III collagen']);if(zoom==='matrix'&&S.vess)L.push(['var(--vessel)','New vessels'],['var(--nerve)','New nerves']);if(zoom==='fascicle'&&S.vess)L.push(['var(--lesion)','Changed bundle']);
+  $('#tendon-legend').innerHTML=L.map(l=>`<span><i style="background:${l[0]}"></i>${l[1]}</span>`).join('');}
+function drawTendon(){sizeCanvas();buildScene();$('#tendon-cap').textContent=CAPS[zoom];legend();cv.setAttribute('aria-label',`${STATES[st].t}, ${zoom==='whole'?'whole tendon':zoom==='fascicle'?'fascicles':'fibres and cells'}. ${CAPS[zoom]}`);update(0);draw();meters();setLive();}
+cv.setAttribute('role','img');
+function frame(ts){requestAnimationFrame(frame);const dt=Math.min(.05,last?(ts-last)/1000:0);last=ts;
+  if(!playing||document.hidden||$('#view-tendon').hidden)return;clock+=dt;update(dt);draw();
+  if(CURVE&&cycling){const dot=$('#curve-dot');if(dot){dot.setAttribute('cx',CURVE.px(strainNow));dot.setAttribute('cy',CURVE.py(CURVE.F(strainNow)));}}
+  meterT+=dt;if(meterT>.3){meterT=0;meters();setLive();}}
+requestAnimationFrame(frame);
+const playBtn=$('#play-btn'),cycBtn=$('#cycle-btn');
+function syncBtns(){playBtn.textContent=playing?'Pause motion':'Play motion';playBtn.setAttribute('aria-pressed',String(!playing));cycBtn.textContent=cycling?'Stop loading cycles':'Run loading cycles';cycBtn.setAttribute('aria-pressed',String(cycling));}
+playBtn.addEventListener('click',()=>{playing=!playing;syncBtns();});
+cycBtn.addEventListener('click',()=>{cycling=!cycling;if(cycling&&!playing)playing=true;if(!cycling&&CURVE)drawCurve();syncBtns();setLive();});
+syncBtns();
+function drawCurve(){const S=STATES[st],e=pull/10,k=S.stiff,F=x=>x<=2?k*x*x/4:k*(x-1),W=300,H=170,px=x=>38+x/8*(W-52),py=f=>H-28-f/9.2*(H-44);CURVE={px,py,F};
+  let d='';for(let x=0;x<=8;x+=.2)d+=(d?'L':'M')+px(x).toFixed(1)+' '+py(F(x)).toFixed(1);let a=`M${px(0)} ${py(0)}`;for(let x=0;x<=e+.001;x+=.2)a+='L'+px(x).toFixed(1)+' '+py(F(x)).toFixed(1);a+=`L${px(e)} ${py(0)}Z`;
+  let h='';if(st!=='healthy'){let b='';for(let x=0;x<=8;x+=.2)b+=(b?'L':'M')+px(x).toFixed(1)+' '+py(x<=2?x*x/4:x-1).toFixed(1);h=`<path d="${b}" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="4 4"/><text x="${px(8)}" y="${py(7)-10}" font-size="11" fill="var(--muted)" text-anchor="end">healthy</text>`;}
+  $('#curve').innerHTML=`<svg viewBox="0 0 ${W} ${H}"><rect x="${px(0)}" y="14" width="${px(2)-px(0)}" height="${H-42}" fill="var(--lav-soft)"/><text x="${px(1)}" y="26" font-size="11" fill="var(--muted)" text-anchor="middle">crimp</text><text x="${px(5)}" y="26" font-size="11" fill="var(--muted)" text-anchor="middle">spring</text>
+   <path d="${a}" fill="var(--teal)" opacity=".25"/>${h}<path d="${d}" fill="none" stroke="var(--col1)" stroke-width="3"/><circle id="curve-dot" cx="${px(e)}" cy="${py(F(e))}" r="6" fill="var(--teal-ink)" stroke="var(--surface)" stroke-width="2"/>
+   <line x1="${px(0)}" y1="${py(0)}" x2="${px(8)}" y2="${py(0)}" stroke="var(--muted)"/><line x1="${px(0)}" y1="${py(0)}" x2="${px(0)}" y2="14" stroke="var(--muted)"/>
+   <text x="${px(4)}" y="${H-6}" font-size="11.5" fill="var(--muted)" text-anchor="middle">Stretch (strain, %)</text><text x="12" y="${H/2}" font-size="11.5" fill="var(--muted)" text-anchor="middle" transform="rotate(-90 12 ${H/2})">Force</text></svg>`;
+  $('#stretch-out').textContent=e.toFixed(1)+'% stretch';
+  const zone=e<2?'The crimp is straightening. Little force is carried yet.':e<5.5?'Fibres are straight and stretching elastically. The shaded area is energy stored and returned, like a spring.':'High strain. This is the heavy end that tells the cells to build a stiffer tendon. It needs recovery time afterwards.';
+  $('#curve-text').textContent=zone+(k>1.1?' A trained tendon is stiffer: more force for the same stretch.':k<.95?' This tendon is a little less stiff than a healthy one, so it stretches further for the same force.':'');
+}
+function renderState(){const S=STATES[st];$('#state-title').textContent=S.t;$('#state-text').textContent=(mode==='client'?S.client:S.team).replace(/ \[\d\](\[\d\])?/g,m=>mode==='client'?'':m);$('#state-note').textContent=S.note;
+  $('#state-meters').innerHTML=METERS.map((m,i)=>`<div class="meter"><span>${m}</span><div class="track"><i style="width:${S.m[i]*25}%;background:${i===5&&S.m[i]?'var(--vessel)':i===2?'var(--col1)':'var(--teal)'}"></i></div><b>${LV[S.m[i]]}</b></div>`).join('');drawTendon();drawCurve();}
+seg('#state-seg','data-st',v=>{st=v;renderState();},st);seg('#zoom-seg','data-zoom',v=>{zoom=v;drawTendon();},zoom);
+const pullChanged=()=>{if(!playing){update(0);draw();}drawCurve();setLive();};
+$('#stretch').addEventListener('input',e=>{pull=+e.target.value;pullChanged();});
+$$('[data-pull]').forEach(b=>b.addEventListener('click',()=>{pull=+b.dataset.pull;$('#stretch').value=pull;pullChanged();}));
+$('#site').innerHTML=SITES.map((s,i)=>`<option value="${i}">${s[0]}</option>`).join('');const siteT=()=>$('#site-text').textContent=SITES[+$('#site').value][1];$('#site').addEventListener('change',siteT);siteT();
+
+/* ---------- load lab ---------- */
+const START={healthy:{C:50,I:0,D:0,floor:0},reactive:{C:55,I:6,D:.15,floor:0},chronic:{C:35,I:4,D:.6,floor:.4}};
+const TYPES={none:{f:0,p:0,n:'no exercise'},stretch:{f:.05,p:.25,n:'stretching'},iso:{f:.7,p:.8,n:'isometric holds'},hsr:{f:1,p:.9,n:'heavy slow resistance'},fast:{f:1,p:1.25,n:'fast, jumping-type loading'}};
+const CTX=[['sleep','Poor sleep',.15],['stress','High stress',.12],['metab','Diabetes or high cholesterol',.12],['age','Older age or post-menopause',.1]];
+const FQ=[0,.5,.8,1,1.05,1.05,1,.95];
+let lab,P={start:'reactive',goal:65,life:45,type:'hsr',inten:70,freq:3,ctx:{},spike:false};
+function labReset(){const s=START[P.start];lab={C:s.C,I:s.I,D:s.D,floor:s.floor,hist:[{w:0,C:s.C,L:null,I:s.I}],why:''};}
+function recov(){return Math.max(.5,1-CTX.reduce((a,c)=>a+(P.ctx[c[0]]?c[2]:0),0));}
+function step(){const T=TYPES[P.type],r=recov(),i=P.inten/100,f=T.f?P.freq:0,L=P.spike?Math.min(100,P.life*1.8+10):P.life;P.spike=false;
+  const C=lab.C,s=Math.max(0,(i-.4)/.6)*T.f,stim=s*FQ[f],gapH=f?168/f:999,pen=f&&i>=.6&&T.f>.5?clamp((40/r-gapH)/30,0,1)*i:0;
+  const peak=Math.max(L,f?i*C*T.p:0),q=peak/C,over=Math.max(0,q-1.05);
+  let dI=6*over+3.2*pen;if(over===0&&pen===0)dI-=.9*r+(stim>.3?.2:0);
+  let dC=3.2*stim*r*(1-C/112)*(1-.6*pen)*(1-lab.I/13)+.8*r*clamp((L/C-.55)/.45,0,1)*(1-C/112);
+  const idle=stim<.2&&L/C<.55;if(idle)dC-=1.3;if(over>.25)dC-=2.2*over;
+  lab.I=clamp(lab.I+dI,0,10);lab.C=clamp(C+dC,15,100);lab.D=clamp(lab.D+.06*over+.04*pen-.012*stim*r,lab.floor,1);
+  const w=lab.hist.length;lab.hist.push({w,C:lab.C,L:peak,I:lab.I});
+  lab.why=over>.25?`Demand was well above capacity this week (${Math.round(peak)} against ${Math.round(C)}). Expect a flare: the response went up and capacity did not.`
+   :over>0?'Demand was a little above capacity. Symptoms rose, but this size of overload settles if next week is steadier.'
+   :pen>.15?`${f} hard sessions a week leaves about ${Math.round(gapH)} hours between them${r<.85?', and recovery is slower in this context':''}. Each session lands before the tendon has finished rebuilding, so it gets more irritable, not stronger.`
+   :idle?'Very little load this week. Symptoms settle, but capacity is drifting down, so the gap to the goal is growing.'
+   :stim>.45?`Heavy enough and spaced well: ${T.n} at this intensity gives the cells a reason to adapt. Capacity is climbing${r<.85?', more slowly because recovery is reduced':''}.`
+   :P.type==='stretch'?'Stretching puts very little force through the tendon. It may feel nice, but capacity is not being built.'
+   :T.f&&i<.5?'This is too light to change the tendon. It is comfortable, and it maintains, but it does not build.'
+   :'A steady week. Daily load is within capacity and is keeping things ticking over.';
+}
+function drawLab(){const W=CW(),H=narrow()?270:300,ml=34,mr=14,mt=14,mb=64,N=Math.max(16,lab.hist.length-1),x=w=>ml+w/N*(W-ml-mr),y=v=>mt+(100-v)/100*(H-mt-mb);
+  let g='';for(let v=0;v<=100;v+=25)g+=`<line x1="${ml}" x2="${W-mr}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${ml-6}" y="${y(v)+4}" font-size="11" fill="var(--muted)" text-anchor="end">${v}</text>`;
+  for(let w=0;w<=N;w+=(narrow()&&N>20?8:4))g+=`<text x="${x(w)}" y="${H-mb+14}" font-size="11" fill="var(--muted)" text-anchor="middle">wk ${w}</text>`;
+  g+=`<line x1="${ml}" x2="${W-mr}" y1="${y(P.goal)}" y2="${y(P.goal)}" stroke="var(--head)" stroke-width="2" stroke-dasharray="6 5"/><text x="${W-mr-4}" y="${y(P.goal)-6}" font-size="11.5" font-weight="700" fill="var(--head)" text-anchor="end">Goal demand</text>`;
+  const h=lab.hist;let dl='';h.slice(1).forEach(p=>{dl+=`${dl?'L':'M'}${x(p.w-1)} ${y(p.L)}L${x(p.w)} ${y(p.L)}`;});
+  if(dl)g+=`<path d="${dl}" fill="none" stroke="var(--orange)" stroke-width="2.5"/>`;
+  g+=`<path d="${h.map((p,i)=>(i?'L':'M')+x(p.w)+' '+y(p.C)).join('')}" fill="none" stroke="var(--teal)" stroke-width="3.5" stroke-linejoin="round"/><circle cx="${x(h[h.length-1].w)}" cy="${y(h[h.length-1].C)}" r="5" fill="var(--teal)"/>`;
+  const by=H-mb+24,bh=30;g+=`<text x="${ml-6}" y="${by+bh/2+4}" font-size="11" fill="var(--muted)" text-anchor="end">Sx</text>`;
+  h.slice(1).forEach(p=>{const c=p.I<3?'var(--teal)':p.I<6?'var(--orange)':'var(--rose)',hh=3+p.I/10*(bh-3);g+=`<rect x="${x(p.w-1)+1.5}" y="${by+bh-hh}" width="${(W-ml-mr)/N-3}" height="${hh}" rx="2" fill="${c}"/>`;});
+  $('#lab-chart').innerHTML=`<svg viewBox="0 0 ${W} ${H}">${g}</svg>`;
+  const gap=P.goal-lab.C,I=lab.I,stn=lab.D<.1?'Organised':lab.D<.3?'Reactive':lab.D<.5?'Some disorganisation':'Changed area present';
+  $('#lab-tiles').innerHTML=`<div class="tile"><b>${Math.round(lab.C)}</b><span>Capacity now</span></div><div class="tile"><b>${gap>0?Math.round(gap):'Met'}</b><span>${gap>0?'Gap to goal':'Goal demand'}</span></div><div class="tile"><b><span class="tag ${I<3?'g':I<6?'a':'r'}">${I<3?'Green':I<6?'Amber':'Red'}</span></b><span>Symptom response ${I.toFixed(1)}/10</span></div><div class="tile"><b style="font-size:15px;font-family:var(--f-body)">${stn}</b><span>Tendon structure</span></div>`;
+  const rd=$('#lab-read');rd.className='callout'+(I>=6?' stop':I>=3?' warn':'');rd.textContent=lab.hist.length===1?'Week 0. Choose a story, or set this week and run it.':`Week ${lab.hist.length-1}. ${lab.why}${gap<=0&&I<3?' Capacity now covers the goal demand with a settled response.':''}${lab.D>=.4&&I<3&&lab.hist.length>6?' Notice the structure has not "normalised", yet symptoms are settled and capacity is up.':''}`;
+}
+function drawColl(){const T=TYPES[P.type],f=T.f>.5?P.freq:0,i=P.inten/100,r=recov(),W=CW(),H=190,ml=20,x=t=>ml+t/72*(W-ml-14),y=v=>24+(1.4-v)/2.2*(H-52),k=.4+i*.8;
+  const syn=t=>k*(t/48)*Math.exp(1-t/48)*(.6+.4*r),deg=t=>k*1.2*(t/18)*Math.exp(1-t/18);let a='',b='',n='';
+  for(let t=0;t<=72;t+=2){a+=(a?'L':'M')+x(t)+' '+y(syn(t)).toFixed(1);b+=(b?'L':'M')+x(t)+' '+y(deg(t)).toFixed(1);n+=(n?'L':'M')+x(t)+' '+y(syn(t)-deg(t)).toFixed(1);}
+  let cross=72;for(let t=4;t<=72;t+=1)if(syn(t)>deg(t)){cross=t;break;}
+  const next=f?168/f:null;let g=`<rect x="${x(0)}" y="24" width="${x(cross)-x(0)}" height="${H-52}" fill="var(--rose-soft)"/><rect x="${x(cross)}" y="24" width="${x(72)-x(cross)}" height="${H-52}" fill="var(--teal-soft)"/>
+   <text x="${x(cross/2)}" y="38" font-size="11.5" fill="var(--fg)" text-anchor="middle">net breakdown</text><text x="${x((72+cross)/2)}" y="38" font-size="11.5" fill="var(--fg)" text-anchor="middle">net building</text>
+   <line x1="${ml}" x2="${W-14}" y1="${y(0)}" y2="${y(0)}" stroke="var(--muted)"/><path d="${b}" fill="none" stroke="var(--rose)" stroke-width="2"/><path d="${a}" fill="none" stroke="var(--teal)" stroke-width="2"/><path d="${n}" fill="none" stroke="var(--head)" stroke-width="3"/>`;
+  for(let t=0;t<=72;t+=(narrow()?24:12))g+=`<text x="${x(t)}" y="${H-10}" font-size="11" fill="var(--muted)" text-anchor="middle">${t} h</text>`;
+  if(next&&next<=72)g+=`<line x1="${x(next)}" x2="${x(next)}" y1="24" y2="${H-28}" stroke="var(--orange)" stroke-width="3"/>`;
+  $('#coll-chart').innerHTML=`<svg viewBox="0 0 ${W} ${H}">${g}</svg>`;
+  $('#coll-text').textContent=`After a loading session, collagen breakdown and building both rise. Breakdown leads for roughly the first day and a half, then building wins for up to three days. ${!f?'Choose isometric, heavy slow or fast loading to see where the next session lands.':next<cross?`At ${f} sessions a week the next session arrives after about ${Math.round(next)} hours, while the tendon is still in net breakdown. Repeat that for weeks and it drifts toward irritable.`:`At ${f} session${f>1?'s':''} a week the next session arrives after about ${Math.round(next)} hours, once the tendon is back in net building.`}${r<.85?' Poor sleep, stress and metabolic factors blunt the building side.':''} Illustrative, after Magnusson and colleagues. [3]`;
+}
+function syncLab(){$('#life').value=P.life;$('#inten').value=P.inten;$('#freq').value=P.freq;$('#life-out').textContent=P.life+(P.spike?' + spike':'');$('#inten-out').textContent=P.inten+'%'+(P.inten<50?' · light':P.inten<70?' · moderate':' · heavy');$('#freq-out').textContent=P.freq;setType(P.type);setS0(P.start);setGoal(P.goal);$$('#ctx button').forEach(b=>b.setAttribute('aria-pressed',String(!!P.ctx[b.dataset.ctx])));drawLab();drawColl();}
+$('#ctx').innerHTML=CTX.map(c=>`<button type="button" class="chip ctx" data-ctx="${c[0]}" aria-pressed="false">${c[1]}</button>`).join('');
+$('#ctx').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;P.ctx[b.dataset.ctx]=!P.ctx[b.dataset.ctx];syncLab();});
+const setType=seg('#type-seg','data-type',v=>{P.type=v;syncLab();},P.type),setS0=seg('#start-seg','data-s0',v=>{P.start=v;labReset();syncLab();},P.start),setGoal=seg('#goal-seg','data-goal',v=>{P.goal=+v;syncLab();},P.goal);
+[['life','life'],['inten','inten'],['freq','freq']].forEach(([id,k])=>$('#'+id).addEventListener('input',e=>{P[k]=+e.target.value;syncLab();}));
+const run=n=>{for(let i=0;i<n;i++)step();syncLab();};
+$('#run1').addEventListener('click',()=>run(1));$('#run4').addEventListener('click',()=>run(4));$('#lab-reset').addEventListener('click',()=>{labReset();syncLab();});$('#spike').addEventListener('click',()=>{P.spike=true;syncLab();$('#lab-read').textContent='Spike queued: next week’s life load nearly doubles (a fun run, a tournament, a busy week at work). Run 1 week.';});
+const PRESETS=[
+ ['Graded loading','reactive',65,w=>({life:w<3?35:Math.min(65,35+(w-2)*3),type:w<2?'iso':'hsr',inten:w<2?60:Math.min(88,68+w*1.5),freq:3})],
+ ['Rest, then return','reactive',65,w=>({life:w<10?10:65,type:'none',inten:20,freq:0})],
+ ['Too much, too soon','healthy',65,w=>({life:w<2?45:w<5?92:38,type:'none',inten:20,freq:0})],
+ ['Boom and bust','reactive',65,w=>({life:w%4<2?85:12,type:'none',inten:20,freq:0})],
+ ['Stretching only','chronic',65,w=>({life:36,type:'stretch',inten:40,freq:7})],
+ ['Hard every day','healthy',90,w=>({life:45,type:'fast',inten:90,freq:7})],
+ ['Long-standing, loaded well','chronic',65,w=>({life:Math.min(58,30+w*2),type:'hsr',inten:Math.min(88,62+w*2),freq:3})]];
+$('#presets').innerHTML=PRESETS.map((p,i)=>`<button type="button" class="btn sm" data-pre="${i}">${p[0]}</button>`).join('');
+$('#presets').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const p=PRESETS[+b.dataset.pre];P.start=p[1];P.goal=p[2];P.spike=false;labReset();for(let w=0;w<16;w++){Object.assign(P,p[3](w));P.life=Math.round(P.life);P.inten=Math.round(P.inten);step();}syncLab();});
+
+/* ---------- pain ---------- */
+const DIMS=['Scan report said "degeneration"','Fear it will tear','Told to rest completely','Poor sleep','High stress','Last session caused a flare'],SIMS=['Understands tendons adapt','Trusts the plan','Knows the next-morning check','Sleeping well','Supportive people','Doing something they enjoy'];
+let dset=new Set(),sset=new Set();
+const chips=(id,arr,cls)=>{$(id).innerHTML=arr.map((t,i)=>`<button type="button" class="chip ${cls}" data-i="${i}" aria-pressed="false">${esc(t)}</button>`).join('');};
+chips('#dims',DIMS,'dim');chips('#sims',SIMS,'sim');
+function bindChips(id,set){$(id).addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const i=+b.dataset.i;set.has(i)?set.delete(i):set.add(i);b.setAttribute('aria-pressed',String(set.has(i)));renderPain();});}
+bindChips('#dims',dset);bindChips('#sims',sset);
+$('#pain-clear').addEventListener('click',()=>{dset.clear();sset.clear();$$('#dims button,#sims button').forEach(b=>b.setAttribute('aria-pressed','false'));renderPain();});
+function renderPain(){const A=+$('#act').value,T=+$('#pcap').value,buf=clamp(.8-dset.size*.085+sset.size*.045,.3,.95),Pr=T*buf;
+  $('#act-out').textContent=A;$('#pcap-out').textContent=T;
+  const W=CW(),K=640/W,H=170,x=v=>30+v/100*(W-60),y0=70,bh=34;
+  let g=`<rect x="${x(0)}" y="${y0}" width="${x(Pr)-x(0)}" height="${bh}" fill="var(--teal)" opacity=".8"/><rect x="${x(Pr)}" y="${y0}" width="${x(T)-x(Pr)}" height="${bh}" fill="var(--orange)" opacity=".8"/><rect x="${x(T)}" y="${y0}" width="${x(100)-x(T)}" height="${bh}" fill="var(--rose)" opacity=".8"/>
+   <text x="${x(Pr/2)}" y="${y0+22}" font-size="12.5" font-weight="700" fill="#fff" text-anchor="middle">${Pr>22*K?'Comfortable':''}</text><text x="${x((Pr+T)/2)}" y="${y0+22}" font-size="12.5" font-weight="700" fill="#fff" text-anchor="middle">${T-Pr>24*K?'Sore but safe':''}</text><text x="${x((T+100)/2)}" y="${y0+22}" font-size="12.5" font-weight="700" fill="#fff" text-anchor="middle">${100-T>30*K?'Beyond capacity':''}</text>
+   <line x1="${x(Pr)}" x2="${x(Pr)}" y1="${y0-22}" y2="${y0+bh+6}" stroke="var(--head)" stroke-width="3"/><text x="${clamp(x(Pr),78,W-78)}" y="${y0-28}" font-size="12.5" font-weight="700" fill="var(--fg)" text-anchor="middle">Protection switches on</text>
+   <line x1="${x(T)}" x2="${x(T)}" y1="${y0-6}" y2="${y0+bh+24}" stroke="var(--head)" stroke-width="3" stroke-dasharray="5 4"/><text x="${clamp(x(T),60,W-60)}" y="${y0+bh+40}" font-size="12.5" font-weight="700" fill="var(--fg)" text-anchor="middle">Tendon capacity</text>
+   <path d="M${x(A)} ${y0-3} l-9 -15 h18 Z" fill="var(--fg)"/><text x="${clamp(x(A),44,W-44)}" y="${y0-50}" font-size="12.5" fill="var(--fg)" text-anchor="middle">This activity</text><line x1="${x(A)}" x2="${x(A)}" y1="${y0-46}" y2="${y0-18}" stroke="var(--fg)" stroke-dasharray="2 3"/>
+   <text x="${x(0)}" y="${H-6}" font-size="11.5" fill="var(--muted)">Light load</text><text x="${x(100)}" y="${H-6}" font-size="11.5" fill="var(--muted)" text-anchor="end">Heavy load</text>`;
+  $('#pain-stage').innerHTML=`<svg viewBox="0 0 ${W} ${H}">${g}</svg>`;
+  const z=A<Pr?0:A<T?1:2,L=$('#pain-light');L.className='light '+'gar'[z];
+  $('#pain-title').textContent=['Protection is low: comfortable','Protection is up: sore, but within what the tendon can take','Beyond current capacity: expect a flare'][z];
+  $('#pain-text').textContent=[`This load sits below the point where protection switches on.${dset.size>2?' With this many DIMs the comfortable zone is small, even though the tendon has not changed.':''}`,
+   `Pain here is the body being careful. The load is still inside the tendon’s capacity. ${dset.size>sset.size?'Notice how early protection switches on: the buffer is wide because of the DIMs, not because the tendon is weaker.':'This is the zone where rehabilitation loading often sits. Use the next-morning check to guide it.'}`,
+   'This is more than the tendon is ready for today. Reduce this load for now and build capacity so the line moves to the right.'][z];
+  const prot=clamp(Math.round((1-buf)/.7*4),0,4);
+  $('#diverge').innerHTML=[['Tendon structure',50,'Unchanged','var(--col1)'],['Protection (pain system)',10+prot*22,['Low','Moderate','High','Very high','Extreme'][prot],prot>1?'var(--rose)':'var(--teal)'],['Capacity (function)',T,T+'/100','var(--teal)']].map(m=>`<div class="meter"><span>${m[0]}</span><div class="track"><i style="width:${m[1]}%;background:${m[3]}"></i></div><b>${m[2]}</b></div>`).join('');
+}
+['act','pcap'].forEach(id=>$('#'+id).addEventListener('input',renderPain));
+function renderChk(){const d=+$('#c-during').value,m=+$('#c-morning').value,f=+$('#c-func').value,t=+$('#c-trend').value;$('#c-during-out').textContent=d+'/10';
+  const z=(m===2||f===2||d>=8)?2:(m===1||f===1||d>=6||t===1)?1:0;$('#chk-light').className='light '+'gar'[z];
+  $('#chk-title').textContent=['Green: continue or progress','Amber: hold or modify','Red: reduce and reassess'][z];
+  $('#chk-text').textContent=['Acceptable symptoms during loading and no meaningful change later or the next morning. The dose is tolerated: keep going, and progress when it feels steady.','The response is higher than expected but function is largely maintained and it settles. Hold the dose, or trim the most provocative part (speed, range, volume), and watch the trend.','A large or worsening response, loss of function, or one that is not settling. Reduce the load, keep what is tolerable, and look at what changed. If the story does not fit, reassess.'][z];}
+['c-during','c-morning','c-func','c-trend'].forEach(id=>$('#'+id).addEventListener('input',renderChk));
+const SAYS=[['"My tendon is degenerating."','"The scan shows some areas where the structure has changed. That is common, including in people with no pain, and there is plenty of healthy tendon around it. The scan cannot show how strong the tendon is. What we can change is how much load it and the muscle can take, and that responds well to training."'],['"Pain means I am damaging it."','"Pain is your body being protective. It tends to switch on early, before the tendon is near its limit, and more so when it has been sore for a while or when you are tired or worried. Some discomfort during exercise is fine. We will use how it feels the next morning to decide whether to do more, the same or a bit less."'],['"Should I rest completely until it heals?"','"Rest will calm it down, but it will not make it stronger, and the tendon and muscle lose strength when they are not used. Instead we will ease back the things that flare it most, keep you moving, and build up loading step by step toward tennis."']];
+$('#says').innerHTML=SAYS.map(s=>`<details class="acc"><summary>Client says: ${esc(s[0])}</summary><div class="body"><p class="tiny">Plan your 30-second answer first: validate, reduce threat, introduce loading.</p><p>${esc(s[1])}</p><p class="tiny">Teach-back: "Just so I know I explained that clearly, what do you think the plan is when the tendon becomes sore?"</p></div></details>`).join('');
+
+/* ---------- rehab ---------- */
+const RUNGS=[
+ ['1','Find tolerable load','Keep useful loading while reducing the biggest provocations',[1,1,1],'Bring the most provocative loads down for now, without stopping everything. Find a load the tendon tolerates and start there.','Jane: swap spin for flat walking, avoid lying on the sore side and standing hanging on one hip; hip abduction holds in a comfortable position.','Mike: fewer back-to-back basketball days, cushioned shoes at work; calf raise holds or slow double-leg raises.','The next-morning response is green for a week or two.'],
+ ['2','Build force','Progressive resistance for the muscle–tendon unit',[1,1,1],'Heavy, slow, progressive resistance. Heavy is relative to the person and must keep moving up. This is the main driver of tendon and muscle adaptation.','Jane: loaded hip abduction, bridges progressing to single-leg, step-ups, leg press, split squats.','Mike: seated and standing calf raises progressing to heavy single-leg, plus general lower-limb strength.','Strength is clearly up and near the other side; loads feel steady.'],
+ ['3','Build range and compression','Greater range or compressive positions when relevant',[0,1,1],'Reintroduce positions that were eased early on, where the task needs them.','Jane: step-downs and lunges into more hip adduction and flexion, lying on the side again.','Mike: calf raises through fuller range off a step, deep ankle positions for landing.','Full task range is tolerated under load.'],
+ ['4','Build rate','Faster contractions and rate of force development',[0,1,1],'Move the same loads faster, then add quick, low-amplitude work.','Jane: quick step-ups, lateral shuffles, fast sit-to-stands.','Mike: faster calf raises, skipping, quick double-leg bounces.','Fast efforts are green the next morning.'],
+ ['5','Build energy storage','Stretch-shortening loading when the goal requires it',[0,1,1],'Hopping, jumping, running and change of direction, dosed with rest days between. A sedentary client may never need this rung.','Jane: split-step, lateral bounds, short tennis footwork drills.','Mike: pogo hops, jump-land progressions, running and sprint build-ups, every second or third day.','Sport-like drills tolerated at volume with a green response.'],
+ ['6','Return to task','Replicate volume, speed, fatigue and context',[1,1,1],'Rebuild the real activity gradually: duration, intensity, then frequency.','Jane: hit-ups, then doubles, then a full social session; stairs and car transfers as markers.','Mike: shooting and drills, half-court, full games; plan around work load.','The activity itself is tolerated with a settled next-day response.'],
+ ['M','Maintain','Keep enough loading to preserve capacity',[1,1,1],'After return, keep one or two strength sessions a week. Capacity that is not used is lost.','Jane: twice-weekly strength alongside tennis and walking.','Mike: in-season heavy calf and leg strength once or twice a week.','Ongoing.']];
+let lg=1,rung=1;
+function renderLadder(){$('#ladder').innerHTML=RUNGS.map((r,i)=>`<button type="button" class="rung${r[3][lg]?'':' off'}" data-r="${i}" aria-pressed="${i===rung}"><span class="n">${r[0]}</span><span>${r[1]}<small>${r[2]}${r[3][lg]?'':' · may not be needed for this goal'}</small></span></button>`).join('');}
+function renderRung(){const r=RUNGS[rung];$('#rung-panel').innerHTML=`<p class="eyebrow">Rung ${r[0]}</p><h3>${r[1]}</h3><p>${r[4]}</p><div class="callout"><strong>Lateral hip.</strong> ${r[5].replace('Jane: ','')}</div><div class="callout navy"><strong>Achilles.</strong> ${r[6].replace('Mike: ','')}</div><p class="tiny"><strong>Move on when:</strong> ${r[7]}</p>`;}
+$('#ladder').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;rung=+b.dataset.r;renderLadder();renderRung();});
+seg('#lgoal-seg','data-lg',v=>{lg=+v;renderLadder();},lg);
+$('#tools').innerHTML=[['Isometric','Force with little joint movement. Useful for symptom-modulated loading or when moving under load is difficult.','Not reliably better for pain relief, and not a required first step.'],['Isotonic','Lifting and lowering through a chosen range. Allows progressive overload and strength gain.','Adjust range, tempo, load and exercise choice to fit.'],['Heavy resistance','Higher-force training to build muscle–tendon force capacity.','Heavy is relative to the person, and should progress.'],['Energy storage','Hopping, jumping, running, change of direction.','Only when the goal needs high-rate loading. Space sessions out.']].map(t=>`<div class="panel soft stack"><h3>${t[0]}</h3><p>${t[1]}</p><p class="tiny">${t[2]}</p></div>`).join('');
+
+/* ---------- cases ---------- */
+const CASES={jane:{name:'Jane, 55',sum:'Gradual-onset right lateral hip pain. Works from home three days a week as an accountant. Lives with her husband and two teenage children.',cols:[['What matters',['Played tennis twice a week, walked regularly, went to spin','Enjoys exercising with friends and being outdoors']],['Presentation',['Lateral hip and buttock pain, some lateral thigh referral','Morning stiffness; sleep disturbed lying on the right','Worse with stairs, standing after sitting, car transfers, spin, tennis','Spin is tolerable in the session but flares the next day']],['Belief',['"I am getting older and the tendon is wearing out. I probably need to rest it."']]],
+  stages:[['First hypotheses','What are your initial hypotheses, and what else would you want to know?','A load-related gluteal tendon presentation fits: lateral hip pain, start-up stiffness, a delayed next-day response and compression-type aggravators. Ask what changed in load, sleep, work set-up and activity over recent months, about menopause and general health, and screen hip joint, lumbar referral and red flags. Choose outcome measures she cares about: stairs, sleep, a tennis marker, hip abductor strength.'],['Demand and capacity','What may have raised demand or lowered capacity?','Demand: spin and tennis volume, long sitting then standing, side-lying and hip-hanging postures that add compression. Capacity: less regular loading, age and hormonal context, sleep disturbed by the pain itself, and a belief that points her toward rest. Try the "Rest, then return" story in the load lab.'],['Explain it','She says complete rest must be safest. What do you say in 30 seconds?','Validate that it is sore and that resting makes sense as a first instinct. Then reduce threat: the tendon is not wearing out, it is sensitive to loads it is not currently prepared for. Introduce the plan: ease the positions and activities that flare it most, and build strength step by step. Check understanding with a teach-back question. Education plus exercise outperformed wait-and-see and injection at one year in gluteal tendinopathy. [7]'],['Plan','Goal: social tennis once a week, stairs and car transfers with manageable symptoms and no meaningful next-day flare. What is the plan?','Modify: pause spin, limit hip adduction postures. Build: progressive hip abductor and lower-limb strength, heavy enough to be a stimulus, two to three times a week. Then range, rate and tennis-specific footwork. Monitor with the next-morning check. At 2 weeks look for a green response; at 6 weeks strength and stairs should be improving; at 12 weeks graded tennis exposure should be tolerated.']]},
+ mike:{name:'Mike, 40',sum:'Right Achilles symptoms began three months ago after joining friends for a 10 km fun run. Construction worker.',cols:[['Current load',['Basketball twice a week plus physically demanding work','Morning and start-up stiffness','Next-day flare after games']],['Belief',['"More stretching should fix it."']]],
+  stages:[['History and testing','What additional history and testing would matter?','Mid-portion or insertional? Training history before the fun run, footwear, work surfaces and hours, medications including recent fluoroquinolones, metabolic health. Test calf capacity (single-leg raises to fatigue, side to side), hopping tolerance and what a game does the next morning. Rule out a tear if there was a sudden event with weakness.'],['What basketball asks','What does basketball need from the Achilles that slow calf raises do not?','High force delivered fast, repeatedly, under fatigue: jumping, landing, sprinting and cutting. Slow raises build force. They do not prepare the tendon for rate and energy storage, so the ladder has to go on to rungs 4 and 5. Compare "Daily life" with "Basketball" on the ladder.'],['Stretching','How do you explain why stretching alone will not close the gap?','Stretching puts little force through the tendon, so it gives the cells no reason to adapt. The problem is a gap between what the tendon is asked to do and what it is prepared for, and only progressive loading closes it. For an insertional presentation, end-range stretching also adds compression. Run "Stretching only" in the load lab.'],['Build his week','Rehab has to coexist with work and sport. How do you lay out the week?','Count total weekly load: work, games, rehab and recovery. Put heavy calf strength on days away from games, avoid stacking games and fast loading on consecutive days, and reduce one basketball session at first if the next-morning check is amber or red. Before raising game exposure, look for strong single-leg calf capacity, tolerated hopping and running, and a green response to the current week.']]}};
+let cs='jane';
+function renderCase(){const c=CASES[cs];$('#case-main').innerHTML=`<div class="panel stack"><p class="eyebrow">Fictional case</p><h3>${c.name}</h3><p>${c.sum}</p><div class="grid3">${c.cols.map(k=>`<div><p class="eyebrow" style="margin-bottom:6px">${k[0]}</p><ul>${k[1].map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`).join('')}</div></div>`+c.stages.map(s=>`<details class="acc"><summary>${s[0]}</summary><div class="body"><p><strong>${s[1]}</strong></p><details><summary class="btn sm" style="display:inline-flex">Show what a good answer covers</summary><p style="margin-top:10px">${esc(s[2])}</p></details></div></details>`).join('');}
+seg('#case-seg','data-case',v=>{cs=v;renderCase();},cs);
+
+/* ---------- check ---------- */
+const QUIZ=[
+ ['What is the ultimate goal of tendinopathy rehabilitation?',['A normal-looking scan','No pain during any exercise','Making the person capable of tolerating the loads that matter to them','Completing a 12-week eccentric protocol'],2,'Capacity for the person’s own tasks is the target. Pain reduction is useful, but it is not the end point.'],
+ ['A client rests completely for eight weeks. What is the most likely result?',['Capacity rises because the tendon has healed','Symptoms settle but capacity falls, widening the gap to the goal','The tendon structure normalises','Nothing changes'],1,'Rest reduces load. It does not build capacity.'],
+ ['In a reactive tendon, what mainly explains the thickening?',['Collagen fibres snapping','Calcium deposits','Scar tissue','Activated cells producing proteoglycans that bind water'],3,'The collagen is largely intact. The response is cellular and can settle when load is adjusted.'],
+ ['Pain is 4/10 during loading and back to usual the next morning, with normal function. What do you do?',['Continue, and progress when steady','Stop loading for a week','Refer for imaging','Switch to stretching'],0,'That is a green response: tolerable during, settled next morning, function maintained.'],
+ ['Which statement about isometric exercise is best supported?',['It must come before any other loading','It is one option, not reliably superior for pain','It heals tendon structure','It should always be 5 × 45 seconds'],1,'Isometrics help some people. They are a tool, not a required first stage.'],
+ ['What kind of loading best drives tendon adaptation in healthy tendons?',['Light loads, daily','Stretching held for 60 seconds','High-magnitude loading sustained over months','Any movement, as long as it is pain-free'],2,'Adaptation depends on high strain magnitude and an intervention of 12 weeks or more. [4]'],
+ ['A scan reports "degenerative changes". Which explanation is most accurate and least threatening?',['"There is some structural change, which is common. Plenty of healthy tendon remains and it can get stronger."','"The tendon is wearing out, so we must protect it."','"It could tear at any time."','"The scan is wrong."'],0,'Structural change is common without pain, and aligned tissue is usually maintained around it. [5]'],
+ ['Two people have the same tendon capacity. One sleeps badly, is stressed and fears a tear. What differs?',['Their tendon structure','Nothing','Their collagen type','How early protection (pain) switches on'],3,'Protection depends on the whole context. The tendon can be the same while the pain is very different.']];
+$('#quiz').innerHTML=QUIZ.map((q,i)=>`<fieldset data-q="${i}"><legend>${i+1}. ${esc(q[0])}</legend>${q[1].map((o,j)=>`<label><input type="radio" name="q${i}" id="q${i}o${j}" value="${j}"><span>${esc(o)}</span></label>`).join('')}<p class="fb" hidden></p></fieldset>`).join('')+`<div class="panel" role="status" aria-live="polite"><p id="quiz-res" style="font-family:var(--f-display);font-size:19px">Answer every question, then check.</p></div><div class="row"><button class="btn primary" type="submit">Check my answers</button><button class="btn" type="reset">Clear</button></div>`;
+$('#quiz').addEventListener('submit',e=>{e.preventDefault();let n=0,miss=-1;QUIZ.forEach((q,i)=>{const c=$(`input[name=q${i}]:checked`);if(!c&&miss<0)miss=i;});
+  if(miss>=0){$('#quiz-res').textContent=`Question ${miss+1} still needs an answer.`;$(`#q${miss}o0`).focus();return;}
+  QUIZ.forEach((q,i)=>{const ok=+$(`input[name=q${i}]:checked`).value===q[2];if(ok)n++;const fb=$(`[data-q="${i}"] .fb`);fb.hidden=false;fb.innerHTML=`<span class="${ok?'right':'wrong'}">${ok?'Correct.':'Not quite.'}</span> ${esc(q[3])}`;});
+  $('#quiz-res').textContent=`${n} of ${QUIZ.length}. ${n>=7?'Well done.':'Read the explanations and try again.'}`;});
+$('#quiz').addEventListener('reset',()=>{$$('#quiz .fb').forEach(f=>f.hidden=true);$('#quiz-res').textContent='Answer every question, then check.';});
+const SRC=[['Cook JL, Purdam CR. Is tendon pathology a continuum? A pathology model to explain the clinical presentation of load-induced tendinopathy. Br J Sports Med. 2009;43:409-416.','https://doi.org/10.1136/bjsm.2008.051193'],['Cook JL, Rio E, Purdam CR, Docking SI. Revisiting the continuum model of tendon pathology: what is its merit in clinical practice and research? Br J Sports Med. 2016;50:1187-1191.','https://doi.org/10.1136/bjsports-2015-095422'],['Magnusson SP, Langberg H, Kjaer M. The pathogenesis of tendinopathy: balancing the response to loading. Nat Rev Rheumatol. 2010;6:262-268.','https://doi.org/10.1038/nrrheum.2010.43'],['Bohm S, Mersmann F, Arampatzis A. Human tendon adaptation in response to mechanical loading: a systematic review and meta-analysis of exercise intervention studies on healthy adults. Sports Med Open. 2015;1:7.','https://doi.org/10.1186/s40798-015-0009-9'],['Docking SI, Cook J. Pathological tendons maintain sufficient aligned fibrillar structure on ultrasound tissue characterization (UTC). Scand J Med Sci Sports. 2016;26:675-683.','https://doi.org/10.1111/sms.12491'],['Silbernagel KG, Thomee R, Eriksson BI, Karlsson J. Continued sports activity, using a pain-monitoring model, during rehabilitation in patients with Achilles tendinopathy: a randomized controlled study. Am J Sports Med. 2007;35:897-906.',''],['Mellor R, Bennell K, Grimaldi A, et al. Education plus exercise versus corticosteroid injection use versus a wait and see approach on global outcome and pain from gluteal tendinopathy: prospective, single blinded, randomised clinical trial. BMJ. 2018;361:k1662.','https://doi.org/10.1136/bmj.k1662'],['Rio E, Kidgell D, Purdam C, et al. Isometric exercise induces analgesia and reduces inhibition in patellar tendinopathy. Br J Sports Med. 2015;49:1277-1283. Later reviews find isometrics are not consistently superior to isotonic loading.',''],['Malliaras P, Barton CJ, Reeves ND, Langberg H. Achilles and patellar tendinopathy loading programmes: a systematic review comparing clinical outcomes and identifying potential mechanisms for effectiveness. Sports Med. 2013;43:267-286.',''],['Moseley GL, Butler DS. Explain Pain Supercharged. Noigroup Publications; 2017. (Protection, DIMs and SIMs.)',''],['PACE Health. Tendinopathy Rehabilitation participant workbook, Module 2. 2026.','']];
+$('#sources').innerHTML=SRC.map(s=>`<li>${esc(s[0])}${s[1]?` <a href="${s[1]}" target="_blank" rel="noopener">Link</a>`:''}</li>`).join('');
+
+/* ---------- boot ---------- */
+labReset();syncLab();renderLadder();renderChk();renderCase();setMode(mode);
+let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{drawTendon();drawLab();drawColl();renderPain();},150);});
+})();
+</script>
+
+</body>
+</html>
